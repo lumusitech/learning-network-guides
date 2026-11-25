@@ -50,9 +50,9 @@ Guías completas de configuración, verificación y mantenimiento diario. Cada g
 
 | Guía | Nivel | Qué enseña a configurar y operar |
 |------|:-----:|----------------------------------|
-| `enterprise-wifi-vlans-and-roaming.md` | 🟡 Intermedio | Múltiples SSIDs con VLANs, planificación de canales 2.4/5GHz, potencia TX y roaming `802.11k/v/r` |
-| `poe-budgeting-and-switch-management.md` | 🟢 Básico | Administración PoE `802.3af/at/bt`, prioridades de corte, monitoreo de watts y power-cycle remoto |
-| `physical-diagnostics-sfp-fiber-and-tdr.md` | 🟡 Intermedio | Diagnóstico de cableado por TDR desde CLI, lectura de niveles ópticos SFP (`dBm`) y análisis de errores CRC |
+| [`enterprise-wifi-vlans-and-roaming.md`](05-wireless-poe/enterprise-wifi-vlans-and-roaming.md) | 🟡 Intermedio | Múltiples SSIDs con VLANs, planificación de canales 2.4/5GHz, potencia TX y roaming `802.11k/v/r` |
+| [`poe-budgeting-and-switch-management.md`](05-wireless-poe/poe-budgeting-and-switch-management.md) | 🟢 Básico | Administración PoE `802.3af/at/bt`, prioridades de corte, monitoreo de watts y power-cycle remoto |
+| [`physical-diagnostics-sfp-fiber-and-tdr.md`](05-wireless-poe/physical-diagnostics-sfp-fiber-and-tdr.md) | 🟡 Intermedio | Diagnóstico de cableado por TDR desde CLI, lectura de niveles ópticos SFP (`dBm`) y análisis de errores CRC |
 
 ### 6. `06-mikrotik/` — Especialización MikroTik RouterOS v7
 
@@ -66,8 +66,8 @@ Guías completas de configuración, verificación y mantenimiento diario. Cada g
 
 | Guía | Nivel | Qué enseña a configurar y operar |
 |------|:-----:|----------------------------------|
-| `cisco-ios-cli-architecture-and-hardening.md` | 🟢 Básico | Arquitectura CLI, seguridad VTY/SSH, `errdisable recovery` automático y archivo de configuraciones |
-| `cisco-rommon-password-recovery-and-ios-upgrade.md` | 🟡 Intermedio | Recuperación de acceso por ROMMON (`0x2142`), actualización y verificación de imágenes IOS |
+| [`cisco-ios-cli-architecture-and-hardening.md`](07-cisco/cisco-ios-cli-architecture-and-hardening.md) | 🟢 Básico | Arquitectura CLI, seguridad VTY/SSH, `errdisable recovery` automático y archivo de configuraciones |
+| [`cisco-rommon-password-recovery-and-ios-upgrade.md`](07-cisco/cisco-rommon-password-recovery-and-ios-upgrade.md) | 🟡 Intermedio | Recuperación de acceso por ROMMON (`0x2142`), actualización y verificación de imágenes IOS |
 
 ### 8. `08-operations/` — Mantenimiento y Operación del Día a Día
 
