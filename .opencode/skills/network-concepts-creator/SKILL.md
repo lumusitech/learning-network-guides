@@ -21,9 +21,9 @@ Author conceptual mental-model documents in `concepts/<kebab-name>.md` for `lear
 ## Hard rules for the author model
 
 1. **Pure mental models, not CLI runbooks:** Explain *how the protocol or mechanism works internally*, *why it fails*, and *how vendors name the same thing*. Do not paste long step-by-step configuration scripts (those belong in `guides/` and `scenarios/`).
-2. **Mandatory template:** Follow [`assets/concept-template.md`](assets/concept-template.md) section by section. Never omit a required section.
+2. **Mandatory template & Gold Standards:** Follow [`assets/concept-template.md`](assets/concept-template.md) section by section and match the technical depth, clarity, and tone of the Gold Standard examples [`../../../concepts/how-to-think-like-network-engineer.md`](../../../concepts/how-to-think-like-network-engineer.md) and [`../../../concepts/osi-and-tcp-ip-models.md`](../../../concepts/osi-and-tcp-ip-models.md).
 3. **Catalog compliance:** Check [`references/catalog-and-standards.md`](references/catalog-and-standards.md) for the target concept's required subtopics, OSI layer scope, and multi-vendor terms before writing.
-4. **Multi-vendor terminology table:** Every concept must include a table mapping the standard IEEE/IETF term to **Cisco IOS**, **MikroTik RouterOS**, **Generic/Aruba/Ubiquiti**, and **Linux**.
+4. **Multi-vendor terminology table:** Every concept must include a table mapping the standard IEEE/IETF term to **Cisco IOS**, **MikroTik RouterOS**, **Generic/Aruba/Ubiquiti/TP-Link**, and **Linux**.
 5. **Visual ASCII diagram:** Include at least one fenced `text` block showing packet flow, frame headers, state transitions, or physical topology.
 6. **Normal vs. Anomalous signals:** Include a diagnostic table contrasting healthy network behavior with failure symptoms and their root layer.
 7. **30-second mental model:** The `## 🧠 Modelo mental` section must include the exact phrase `"Pensá en esto como..."` and explain the concept with a concrete physical analogy.
@@ -34,14 +34,14 @@ Author conceptual mental-model documents in `concepts/<kebab-name>.md` for `lear
 
 | Situation | Required action |
 |---|---|
-| User asks for a concept from the catalog | Look up its required scope in [`references/catalog-and-standards.md`](references/catalog-and-standards.md) and instantiate [`assets/concept-template.md`](assets/concept-template.md). |
+| User asks for a concept from the catalog | Look up its required scope in [`references/catalog-and-standards.md`](references/catalog-and-standards.md), read [`../../../concepts/osi-and-tcp-ip-models.md`](../../../concepts/osi-and-tcp-ip-models.md) as quality benchmark, and instantiate [`assets/concept-template.md`](assets/concept-template.md). |
 | User asks for a concept not in the catalog | Map it to the closest OSI layer, apply [`assets/concept-template.md`](assets/concept-template.md), and register it in `concepts/README.md`. |
 | Concept mentions a vendor-specific feature | Explain the underlying IEEE/IETF standard first, then contrast vendor names in the equivalence table. |
-| Target guide/scenario link does not exist yet | Reference the planned relative path or link to existing sibling files in `concepts/` without leaving empty `[]()` links. |
+| Target guide/scenario link does not exist yet | Link to related sibling files in `concepts/` without leaving empty `[]()` links. |
 
 ## Execution workflow
 
-1. Read [`assets/concept-template.md`](assets/concept-template.md) and [`references/catalog-and-standards.md`](references/catalog-and-standards.md).
-2. Draft `concepts/<kebab-name>.md` covering every required subtopic with technical depth (real header fields, timers, frame sizes, IEEE standards).
-3. Register the new file in `concepts/README.md` under its corresponding learning phase.
+1. Read [`assets/concept-template.md`](assets/concept-template.md), [`references/catalog-and-standards.md`](references/catalog-and-standards.md), and one Gold Standard file in `concepts/`.
+2. Draft `concepts/<kebab-name>.md` covering every required subtopic with technical depth (real header fields, timers, frame sizes, IEEE/RFC standards).
+3. Update `concepts/README.md` changing the plain backtick entry `` `file.md` `` into an active link `` [`file.md`](file.md) ``.
 4. Run `pnpm lint:md` and fix any formatting errors before reporting completion.

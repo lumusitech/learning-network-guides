@@ -25,8 +25,8 @@ Leé `concepts/` cuando:
 
 | # | Concepto | Capas | Qué vas a dominar |
 |---|----------|:-----:|-------------------|
-| 1 | `how-to-think-like-network-engineer.md` | 1–7 | Diagnóstico sistemático por capas, plano de control vs datos, baseline y cambios seguros |
-| 2 | `osi-and-tcp-ip-models.md` | 1–7 | Encapsulamiento real, cabeceras, PDUs (bits, tramas, paquetes, segmentos) y aislamiento de fallas |
+| 1 | [`how-to-think-like-network-engineer.md`](how-to-think-like-network-engineer.md) | 1–7 | Diagnóstico sistemático por capas, plano de control vs datos vs gestión, baseline y cambios seguros |
+| 2 | [`osi-and-tcp-ip-models.md`](osi-and-tcp-ip-models.md) | 1–7 | Encapsulamiento byte a byte, cabeceras, PDUs (bits, tramas, paquetes, segmentos) y aislamiento de fallas |
 | 3 | `physical-layer-cables-fiber-poe.md` | 1 | Cobre (Cat5e/6/6A), fibra óptica (OS2 vs OM3/OM4, SFP/SFP+, dBm), duplex/velocidad y PoE (802.3af/at/bt vs pasivo) |
 
 ### Bloque 2 — Capa 2: Switching, Ethernet y Segmentación
