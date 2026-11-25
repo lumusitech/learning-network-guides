@@ -42,9 +42,9 @@ Leé `concepts/` cuando:
 
 | # | Concepto | Capas | Qué vas a dominar |
 |---|----------|:-----:|-------------------|
-| 8 | `ipv4-addressing-subnetting-and-vlsm.md` | 3 | CIDR, cálculo rápido de subredes, RFC 1918, CGNAT (`100.64.0.0/10`), enlaces `/30` y `/31` y diseño de direccionamiento por sede/VLAN |
-| 9 | `routing-fundamentals-static-and-dynamic.md` | 3 | Qué cambia en cada salto (MAC vs IP/TTL), tabla de rutas, *Longest Prefix Match*, Distancia Administrativa multi-vendor, Inter-VLAN (ROAS vs SVI), OSPF y BGP |
-| 10 | `first-hop-redundancy-vrrp-hsrp.md` | 3 | Redundancia de Default Gateway con VRRP y HSRP, IP/MAC virtual, Master/Backup y tracking de caída de WAN |
+| 8 | [`ipv4-addressing-subnetting-and-vlsm.md`](ipv4-addressing-subnetting-and-vlsm.md) | 3 | CIDR, cálculo rápido de subredes, RFC 1918, CGNAT (`100.64.0.0/10`), enlaces `/30` y `/31` y diseño de direccionamiento por sede/VLAN |
+| 9 | [`routing-fundamentals-static-and-dynamic.md`](routing-fundamentals-static-and-dynamic.md) | 3 | Qué cambia en cada salto (MAC vs IP/TTL), tabla de rutas, *Longest Prefix Match*, Distancia Administrativa multi-vendor, Inter-VLAN (ROAS vs SVI), OSPF y BGP |
+| 10 | [`first-hop-redundancy-vrrp-hsrp.md`](first-hop-redundancy-vrrp-hsrp.md) | 3 | Redundancia de Default Gateway con VRRP y HSRP, IP/MAC virtual, Master/Backup y tracking de caída de WAN |
 
 ### Bloque 4 — Capas 4 a 7: Transporte, NAT, Firewalls, Servicios y Operación
 
