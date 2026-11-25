@@ -52,6 +52,7 @@ entender → configurar → practicar → operar y diagnosticar
 ## 🗺️ Roadmap de aprendizaje (De OSI al día a día)
 
 ### Nivel 1 — Fundamentos y Modelos Mentales (`concepts/`)
+
 1. **Modelos OSI y TCP/IP en la vida real:** encapsulamiento, PDUs (bits, tramas, paquetes, segmentos) y cómo usar las capas para aislar cualquier falla en 2 minutos.
 2. **Capa 1 (Física):** cobre (Cat5e/6/6A), fibra óptica (monomodo vs multimodo, transceptores SFP/SFP+), PoE (802.3af/at/bt), negociación de velocidad/duplex y diagnóstico de errores físicos (CRC, runts, giants).
 3. **Capa 2 (Enlace de datos):** direcciones MAC, tablas CAM/FDB, ARP, dominios de colisión vs dominios de difusión (broadcast).
@@ -59,6 +60,7 @@ entender → configurar → practicar → operar y diagnosticar
 5. **Capa 4 (Transporte) y Servicios Esenciales:** TCP (3-way handshake, flags, ventanas, MSS) vs UDP, puertos, DNS, DHCP (DORA + Relay) y NAT/PAT.
 
 ### Nivel 2 — Switching L2/L3 Multi-Vendor (`guides/switching/`)
+
 1. **Primer contacto con equipos:** acceso por cable de consola (RS-232/USB), SSH, hardening inicial, gestión out-of-band (OOB).
 2. **VLANs y Trunking (IEEE 802.1Q):** puertos Access, Trunk y Hybrid; Native VLAN / PVID (cómo funcionan en Cisco vs MikroTik Bridge VLAN Filtering vs Ubiquiti/TP-Link).
 3. **Prevención de bucles (STP / RSTP / MSTP):** elección de Root Bridge, PortFast / Edge Port, BPDU Guard y qué pasa cuando alguien conecta un cable entre dos bocas de pared.
@@ -66,6 +68,7 @@ entender → configurar → practicar → operar y diagnosticar
 5. **Seguridad en Capa 2:** DHCP Snooping, Dynamic ARP Inspection (DAI), Port Security, aislamiento de puertos y 802.1X.
 
 ### Nivel 3 — Routing, Firewalls y Conectividad (`guides/routing/` & `guides/firewalls-vpn/`)
+
 1. **Inter-VLAN Routing:** Router-on-a-Stick vs Switch Capa 3 (SVIs).
 2. **Enrutamiento Estático y Dinámico:** rutas flotantes, OSPF (single-area y multi-area), introducción práctica a BGP e integración con FRRouting.
 3. **Redundancia de Gateway y Multi-WAN:** VRRP / HSRP, failover automático de proveedores de Internet (ISP) con chequeo de salud y balanceo de carga (PCC en MikroTik / PBR).
@@ -73,6 +76,7 @@ entender → configurar → practicar → operar y diagnosticar
 5. **VPNs Site-to-Site y Remote Access:** WireGuard, IPsec IKEv2 y diseño de acceso remoto seguro para administradores.
 
 ### Nivel 4 — Operación y Mantenimiento del Día a Día (`guides/operations/` & `scenarios/maintenance/`)
+
 1. **Backups y Control de Cambios:** exportación automática de configuraciones (`.rsc` en MikroTik, `running-config` en Cisco), control de versiones en Git y detección de *config drift*.
 2. **Actualizaciones de Firmware Seguras:** procedimientos pre-check, upgrade y rollback en switches, routers y controladoras WiFi sin dejar aislada la sede.
 3. **Observabilidad de Red:** SNMP (v2c/v3), Syslog centralizado, NetFlow/sFlow, LLDP/CDP/MNDP para descubrir y documentar la topología real.
