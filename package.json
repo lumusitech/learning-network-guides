@@ -1,0 +1,25 @@
+{
+  "name": "learning-network-guides",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema de aprendizaje práctico para ingeniería, administración y operación de redes multi-vendor",
+  "scripts": {
+    "lint:md": "markdownlint-cli2 '**/*.md' '#node_modules' '#.git'",
+    "lint:md:fix": "markdownlint-cli2 --fix '**/*.md' '#node_modules' '#.git'",
+    "validate": "pnpm lint:md"
+  },
+  "keywords": [
+    "networking",
+    "netops",
+    "cisco",
+    "mikrotik",
+    "switching",
+    "routing",
+    "vlans",
+    "osi"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "markdownlint-cli2": "^0.22.1"
+  }
+}
