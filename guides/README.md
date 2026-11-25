@@ -31,20 +31,20 @@ Guías completas de configuración, verificación y mantenimiento diario. Cada g
 
 | Guía | Nivel | Qué enseña a configurar y operar |
 |------|:-----:|----------------------------------|
-| `inter-vlan-routing-roas-vs-svi.md` | 🟡 Intermedio | Enrutamiento entre VLANs: Router-on-a-Stick (subinterfaces) vs Switch Capa 3 (SVIs + L3 Hardware Offload) |
-| `static-routing-and-floating-routes.md` | 🟢 Básico | Rutas estáticas, default gateway, rutas de descarte (blackhole/null0) y rutas flotantes de backup |
-| `ospf-single-and-multi-area.md` | 🔴 Avanzado | OSPFv2 multi-vendor (Cisco ↔ MikroTik v7 ↔ FRRouting): áreas, Router-ID, interfaces pasivas, costos y troubleshooting |
-| `vrrp-and-hsrp-gateway-redundancy.md` | 🟡 Intermedio | Redundancia de Default Gateway con VRRP y HSRP, preemption y seguimiento de enlaces WAN |
-| `dual-wan-failover-and-load-balancing.md` | 🔴 Avanzado | Multi-WAN en producción: failover con rutas recursivas / IP SLA / Netwatch y balanceo PCC / PBR |
+| [`inter-vlan-routing-roas-vs-svi.md`](03-routing-l3/inter-vlan-routing-roas-vs-svi.md) | 🟡 Intermedio | Enrutamiento entre VLANs: Router-on-a-Stick (subinterfaces) vs Switch Capa 3 (SVIs + L3 Hardware Offload) |
+| [`static-routing-and-floating-routes.md`](03-routing-l3/static-routing-and-floating-routes.md) | 🟢 Básico | Rutas estáticas, default gateway, rutas de descarte (blackhole/null0) y rutas flotantes de backup |
+| [`ospf-single-and-multi-area.md`](03-routing-l3/ospf-single-and-multi-area.md) | 🔴 Avanzado | OSPFv2 multi-vendor (Cisco ↔ MikroTik v7 ↔ FRRouting): áreas, Router-ID, interfaces pasivas, costos y troubleshooting |
+| [`vrrp-and-hsrp-gateway-redundancy.md`](03-routing-l3/vrrp-and-hsrp-gateway-redundancy.md) | 🟡 Intermedio | Redundancia de Default Gateway con VRRP y HSRP, preemption y seguimiento de enlaces WAN |
+| [`dual-wan-failover-and-load-balancing.md`](03-routing-l3/dual-wan-failover-and-load-balancing.md) | 🔴 Avanzado | Multi-WAN en producción: failover con rutas recursivas / IP SLA / Netwatch y balanceo PCC / PBR |
 
 ### 4. `04-firewalls-nat-vpn/` — Firewalls, NAT y VPNs
 
 | Guía | Nivel | Qué enseña a configurar y operar |
 |------|:-----:|----------------------------------|
-| `stateful-firewall-and-zone-acls.md` | 🟡 Intermedio | Diseño de reglas `INPUT` y `FORWARD`, aislamiento entre zonas (LAN, DMZ, CCTV, Guest) y uso seguro de FastTrack |
-| `nat-masquerade-dnat-and-hairpin.md` | 🟡 Intermedio | Source NAT / Masquerade, Port Forwarding (`DNAT`) y configuración de **Hairpin NAT** |
-| `wireguard-site-to-site-and-roadwarrior.md` | 🟡 Intermedio | VPNs WireGuard entre sedes (MikroTik ↔ Linux) y acceso remoto de administradores con ajuste de MTU/MSS |
-| `ipsec-ikev2-site-to-site.md` | 🔴 Avanzado | Túneles IPsec IKEv2 estándar entre fabricantes distintos (MikroTik ↔ Cisco / Fortinet / pfSense) y NAT Bypass |
+| [`stateful-firewall-and-zone-acls.md`](04-firewalls-nat-vpn/stateful-firewall-and-zone-acls.md) | 🟡 Intermedio | Diseño de reglas `INPUT` y `FORWARD`, aislamiento entre zonas (LAN, DMZ, CCTV, Guest) y uso seguro de FastTrack |
+| [`nat-masquerade-dnat-and-hairpin.md`](04-firewalls-nat-vpn/nat-masquerade-dnat-and-hairpin.md) | 🟡 Intermedio | Source NAT / Masquerade, Port Forwarding (`DNAT`) y configuración de **Hairpin NAT** |
+| [`wireguard-site-to-site-and-roadwarrior.md`](04-firewalls-nat-vpn/wireguard-site-to-site-and-roadwarrior.md) | 🟡 Intermedio | VPNs WireGuard entre sedes (MikroTik ↔ Linux) y acceso remoto de administradores con ajuste de MTU/MSS |
+| [`ipsec-ikev2-site-to-site.md`](04-firewalls-nat-vpn/ipsec-ikev2-site-to-site.md) | 🔴 Avanzado | Túneles IPsec IKEv2 estándar entre fabricantes distintos (MikroTik ↔ Cisco / Fortinet / pfSense) y NAT Bypass |
 
 ### 5. `05-wireless-poe/` — WiFi Corporativo, PoE y Capa Física
 
