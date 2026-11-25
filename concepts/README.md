@@ -19,7 +19,7 @@ Leé `concepts/` cuando:
 
 ---
 
-## 🗺️ Índice progresivo de conceptos (De Capa 1 al Día a Día)
+## 🗺️ Índice progresivo de conceptos (De Capa 1 al Día a Día — 14/14 Completados)
 
 ### Bloque 1 — Fundamentos y Modelos de Diagnóstico
 
@@ -50,10 +50,10 @@ Leé `concepts/` cuando:
 
 | # | Concepto | Capas | Qué vas a dominar |
 |---|----------|:-----:|-------------------|
-| 11 | `tcp-udp-mtu-and-nat-conntrack.md` | 3–4 | Handshake TCP, MTU vs MSS (PPPoE/VPNs y MSS Clamping), tabla Conntrack y los 4 tipos de NAT (SNAT/Masquerade, DNAT, 1:1, Hairpin NAT) |
-| 12 | `stateful-firewalls-and-zone-segmentation.md` | 3–7 | ACL stateless vs Firewall stateful, flujo de cadenas (`INPUT` vs `FORWARD` vs `OUTPUT`) y arquitectura de zonas (LAN, DMZ, CCTV/IoT, Guest) |
-| 13 | `dhcp-dns-and-network-services.md` | 2–7 | Ciclo DHCP DORA, DHCP Relay (`ip helper-address`), Rogue DHCP, resolución DNS (Split-Horizon) y por qué NTP es crítico |
-| 14 | `netops-day-to-day-maintenance-and-observability.md` | 1–7 | Operación diaria: SNMP, Syslog, NetFlow, descubrimiento LLDP/CDP/MNDP, backups en texto (`.rsc`/`running-config`) y ventanas de mantenimiento sin corte |
+| 11 | [`tcp-udp-mtu-and-nat-conntrack.md`](tcp-udp-mtu-and-nat-conntrack.md) | 3–4 | Handshake TCP, MTU vs MSS (PPPoE/VPNs y MSS Clamping), tabla Conntrack y los 4 tipos de NAT (SNAT/Masquerade, DNAT, 1:1, Hairpin NAT) |
+| 12 | [`stateful-firewalls-and-zone-segmentation.md`](stateful-firewalls-and-zone-segmentation.md) | 3–7 | ACL stateless vs Firewall stateful, flujo de cadenas (`INPUT` vs `FORWARD` vs `OUTPUT`) y arquitectura de zonas (LAN, DMZ, CCTV/IoT, Guest) |
+| 13 | [`dhcp-dns-and-network-services.md`](dhcp-dns-and-network-services.md) | 2–7 | Ciclo DHCP DORA, DHCP Relay (`ip helper-address`), Rogue DHCP, resolución DNS (Split-Horizon) y por qué NTP es crítico |
+| 14 | [`netops-day-to-day-maintenance-and-observability.md`](netops-day-to-day-maintenance-and-observability.md) | 1–7 | Operación diaria: SNMP, Syslog, NetFlow, descubrimiento LLDP/CDP/MNDP, backups en texto (`.rsc`/`running-config`) y ventanas de mantenimiento sin corte |
 
 ---
 
