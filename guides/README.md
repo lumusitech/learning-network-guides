@@ -12,10 +12,10 @@ Guías completas de configuración, verificación y mantenimiento diario. Cada g
 
 | Guía | Nivel | Qué enseña a configurar y operar |
 |------|:-----:|----------------------------------|
-| `serial-console-and-oob-access.md` | 🟢 Básico | Consola serie RJ45/USB (`9600` vs `115200 8N1`), acceso Out-of-Band (OOB) y rescate sin IP |
-| `ssh-hardening-and-management-plane.md` | 🟡 Intermedio | Claves SSH, VLAN de Management dedicada y cierre de servicios expuestos (Telnet/HTTP/WinBox en WAN) |
-| `neighbor-discovery-lldp-cdp-mndp.md` | 🟢 Básico | Descubrimiento y mapeo de topología en vivo usando LLDP (`802.1AB`), Cisco CDP y MikroTik MNDP |
-| `packet-capture-tcpdump-sniffer-epc.md` | 🔴 Avanzado | Captura de paquetes en routers y switches: `/tool sniffer` (TZSP), Cisco EPC, Port Mirroring y `tcpdump` |
+| [`serial-console-and-oob-access.md`](01-fundamentals/serial-console-and-oob-access.md) | 🟢 Básico | Consola serie RJ45/USB (`9600` vs `115200 8N1`), acceso Out-of-Band (OOB) y rescate sin IP |
+| [`ssh-hardening-and-management-plane.md`](01-fundamentals/ssh-hardening-and-management-plane.md) | 🟡 Intermedio | Claves SSH, VLAN de Management dedicada y cierre de servicios expuestos (Telnet/HTTP/WinBox en WAN) |
+| [`neighbor-discovery-lldp-cdp-mndp.md`](01-fundamentals/neighbor-discovery-lldp-cdp-mndp.md) | 🟢 Básico | Descubrimiento y mapeo de topología en vivo usando LLDP (`802.1AB`), Cisco CDP y MikroTik MNDP |
+| [`packet-capture-tcpdump-sniffer-epc.md`](01-fundamentals/packet-capture-tcpdump-sniffer-epc.md) | 🔴 Avanzado | Captura de paquetes en routers y switches: `/tool sniffer` (TZSP), Cisco EPC, Port Mirroring y `tcpdump` |
 
 ### 2. `02-switching-l2/` — Switching Capa 2 y Seguridad L2
 
@@ -73,9 +73,9 @@ Guías completas de configuración, verificación y mantenimiento diario. Cada g
 
 | Guía | Nivel | Qué enseña a configurar y operar |
 |------|:-----:|----------------------------------|
-| `network-backups-export-and-git-versioning.md` | 🟢 Básico | Backups en texto plano (`.rsc` / `running-config`) vs binarios, automatización por SSH/Oxidized y control en Git |
-| `firmware-upgrades-and-maintenance-windows.md` | 🟡 Intermedio | Protocolo seguro de actualización de RouterOS + RouterBOOT, Cisco IOS y switches sin dejar sedes aisladas |
-| `snmp-syslog-and-netflow-monitoring.md` | 🟡 Intermedio | Observabilidad diaria con SNMPv2c/v3, Syslog centralizado y análisis de tráfico con NetFlow / Traffic Flow |
+| [`network-backups-export-and-git-versioning.md`](08-operations/network-backups-export-and-git-versioning.md) | 🟢 Básico | Backups en texto plano (`.rsc` / `running-config`) vs binarios, automatización por SSH/Oxidized y control en Git |
+| [`firmware-upgrades-and-maintenance-windows.md`](08-operations/firmware-upgrades-and-maintenance-windows.md) | 🟡 Intermedio | Protocolo seguro de actualización de RouterOS + RouterBOOT, Cisco IOS y switches sin dejar sedes aisladas |
+| [`snmp-syslog-and-netflow-monitoring.md`](08-operations/snmp-syslog-and-netflow-monitoring.md) | 🟡 Intermedio | Observabilidad diaria con SNMPv2c/v3, Syslog centralizado y análisis de tráfico con NetFlow / Traffic Flow |
 
 ---
 
