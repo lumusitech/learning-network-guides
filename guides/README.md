@@ -21,11 +21,11 @@ Guías completas de configuración, verificación y mantenimiento diario. Cada g
 
 | Guía | Nivel | Qué enseña a configurar y operar |
 |------|:-----:|----------------------------------|
-| `vlans-8021q-access-trunk-pvid.md` | 🟡 Intermedio | VLANs 802.1Q paso a paso: Access, Trunk, Hybrid y Native/PVID en Cisco, MikroTik Bridge VLAN Filtering, Aruba/TP-Link y Linux |
-| `spanning-tree-rstp-bpduguard.md` | 🟡 Intermedio | RSTP (`802.1w`), elección determinista del Root Bridge, PortFast/Edge y bloqueo automático de bucles con BPDU Guard |
-| `lacp-etherchannel-bonding.md` | 🟡 Intermedio | Agregación de enlaces `802.3ad LACP` (Cisco EtherChannel, MikroTik/Linux Bonding, Aruba Trunk) y balanceo por hash |
-| `port-mirroring-span.md` | 🟢 Básico | Copia de tráfico de puertos o VLANs hacia analizadores Wireshark o sensores IDS |
-| `l2-security-dhcp-snooping-dai-portsec.md` | 🔴 Avanzado | Protección contra Rogue DHCP (*DHCP Snooping*), ARP Spoofing (*DAI*) y límite de MACs por puerto |
+| [`vlans-8021q-access-trunk-pvid.md`](02-switching-l2/vlans-8021q-access-trunk-pvid.md) | 🟡 Intermedio | VLANs 802.1Q paso a paso: Access, Trunk, Hybrid y Native/PVID en Cisco, MikroTik Bridge VLAN Filtering, Aruba/TP-Link y Linux |
+| [`spanning-tree-rstp-bpduguard.md`](02-switching-l2/spanning-tree-rstp-bpduguard.md) | 🟡 Intermedio | RSTP (`802.1w`), elección determinista del Root Bridge, PortFast/Edge y bloqueo automático de bucles con BPDU Guard |
+| [`lacp-etherchannel-bonding.md`](02-switching-l2/lacp-etherchannel-bonding.md) | 🟡 Intermedio | Agregación de enlaces `802.3ad LACP` (Cisco EtherChannel, MikroTik/Linux Bonding, Aruba Trunk) y balanceo por hash |
+| [`port-mirroring-span.md`](02-switching-l2/port-mirroring-span.md) | 🟢 Básico | Copia de tráfico de puertos o VLANs hacia analizadores Wireshark o sensores IDS |
+| [`l2-security-dhcp-snooping-dai-portsec.md`](02-switching-l2/l2-security-dhcp-snooping-dai-portsec.md) | 🔴 Avanzado | Protección contra Rogue DHCP (*DHCP Snooping*), ARP Spoofing (*DAI*) y límite de MACs por puerto |
 
 ### 3. `03-routing-l3/` — Enrutamiento, Inter-VLAN y Alta Disponibilidad
 
@@ -58,9 +58,9 @@ Guías completas de configuración, verificación y mantenimiento diario. Cada g
 
 | Guía | Nivel | Qué enseña a configurar y operar |
 |------|:-----:|----------------------------------|
-| `routeros-v7-first-setup-and-hardening.md` | 🟢 Básico | Configuración inicial limpia, hardening de servicios/MAC-Server, firewall base y RoMON |
-| `mikrotik-bridge-vlan-filtering-deep-dive.md` | 🔴 Avanzado | Arquitectura del Switch Chip y `Bridge VLAN Filtering` con Hardware Offload (`H`) en CRS3xx/5xx y routers RB/CCR |
-| `mikrotik-qos-simple-queues-and-queue-tree.md` | 🔴 Avanzado | Control de ancho de banda con Simple Queues, colas igualitarias PCQ y priorización con Mangle + Queue Tree |
+| [`routeros-v7-first-setup-and-hardening.md`](06-mikrotik/routeros-v7-first-setup-and-hardening.md) | 🟢 Básico | Configuración inicial limpia, hardening de servicios/MAC-Server, firewall base y RoMON |
+| [`mikrotik-bridge-vlan-filtering-deep-dive.md`](06-mikrotik/mikrotik-bridge-vlan-filtering-deep-dive.md) | 🔴 Avanzado | Arquitectura del Switch Chip y `Bridge VLAN Filtering` con Hardware Offload (`H`) en CRS3xx/5xx y routers RB/CCR |
+| [`mikrotik-qos-simple-queues-and-queue-tree.md`](06-mikrotik/mikrotik-qos-simple-queues-and-queue-tree.md) | 🔴 Avanzado | Control de ancho de banda con Simple Queues, colas igualitarias PCQ y priorización con Mangle + Queue Tree |
 
 ### 7. `07-cisco/` — Especialización Cisco IOS / Catalyst
 
