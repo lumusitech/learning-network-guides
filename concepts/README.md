@@ -27,16 +27,16 @@ Leé `concepts/` cuando:
 |---|----------|:-----:|-------------------|
 | 1 | [`how-to-think-like-network-engineer.md`](how-to-think-like-network-engineer.md) | 1–7 | Diagnóstico sistemático por capas, plano de control vs datos vs gestión, baseline y cambios seguros |
 | 2 | [`osi-and-tcp-ip-models.md`](osi-and-tcp-ip-models.md) | 1–7 | Encapsulamiento byte a byte, cabeceras, PDUs (bits, tramas, paquetes, segmentos) y aislamiento de fallas |
-| 3 | `physical-layer-cables-fiber-poe.md` | 1 | Cobre (Cat5e/6/6A), fibra óptica (OS2 vs OM3/OM4, SFP/SFP+, dBm), duplex/velocidad y PoE (802.3af/at/bt vs pasivo) |
+| 3 | [`physical-layer-cables-fiber-poe.md`](physical-layer-cables-fiber-poe.md) | 1 | Cobre (Cat5e/6/6A), fibra óptica (OS2 vs OM3/OM4, SFP/SFP+, dBm), duplex/velocidad y PoE (802.3af/at/bt vs pasivo) |
 
 ### Bloque 2 — Capa 2: Switching, Ethernet y Segmentación
 
 | # | Concepto | Capas | Qué vas a dominar |
 |---|----------|:-----:|-------------------|
-| 4 | `ethernet-mac-and-arp.md` | 2 | Trama Ethernet, tabla MAC/CAM del switch (Learning/Flooding/Forwarding), dominios de broadcast y ARP |
-| 5 | `vlans-tagged-untagged-and-trunks.md` | 2 | Estándar 802.1Q, PVID/Ingress vs Egress y equivalencia exacta: `Access/Trunk` (Cisco) ↔ `Untagged/Tagged/PVID` (MikroTik/Aruba/Genéricos) |
-| 6 | `spanning-tree-and-loop-prevention.md` | 2 | Por qué un loop L2 tira toda la red, cómo eligen Root Bridge STP/RSTP, PortFast/Edge y BPDU Guard |
-| 7 | `link-aggregation-and-redundancy-l2.md` | 2 | LACP (802.3ad), algoritmos de hash y por qué EtherChannel/Bonding multiplica caudal total pero no el de un solo flujo TCP |
+| 4 | [`ethernet-mac-and-arp.md`](ethernet-mac-and-arp.md) | 2 | Trama Ethernet, tabla MAC/CAM del switch (Learning/Flooding/Forwarding), dominios de broadcast y ARP |
+| 5 | [`vlans-tagged-untagged-and-trunks.md`](vlans-tagged-untagged-and-trunks.md) | 2 | Estándar 802.1Q, PVID/Ingress vs Egress y equivalencia exacta: `Access/Trunk` (Cisco) ↔ `Untagged/Tagged/PVID` (MikroTik/Aruba/Genéricos) |
+| 6 | [`spanning-tree-and-loop-prevention.md`](spanning-tree-and-loop-prevention.md) | 2 | Por qué un loop L2 tira toda la red, cómo eligen Root Bridge STP/RSTP, PortFast/Edge y BPDU Guard |
+| 7 | [`link-aggregation-and-redundancy-l2.md`](link-aggregation-and-redundancy-l2.md) | 2 | LACP (802.3ad), algoritmos de hash y por qué EtherChannel/Bonding multiplica caudal total pero no el de un solo flujo TCP |
 
 ### Bloque 3 — Capa 3: Direccionamiento, Enrutamiento y Redundancia
 
