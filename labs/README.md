@@ -6,6 +6,16 @@ Topologías reproducibles con **Docker Compose**, **FRRouting (`vtysh` estilo Ci
 
 ---
 
+## ⚙️ Requisitos y limitaciones del entorno
+
+- **Host Docker sobre Linux (recomendado).** Los labs usan `NET_ADMIN`/`privileged`, `iptables`, `sysctls` y (en el lab integrador) túneles **WireGuard/GRE**. En **Docker Desktop / WSL2** algunos labs de **NAT/DNAT y ruteo entre bridges** no reproducen su comportamiento esperado, porque el host interfiere en el ruteo entre redes; para esas prácticas conviene un **host Docker Linux nativo**.
+- **Orden de interfaces no garantizado.** Docker Compose asigna las interfaces de un servicio **en orden alfabético por nombre de red** (no por el orden en que se declaran). Por eso los labs que dependen de una interfaz concreta la **detectan por su IP** al arrancar (p. ej. la WAN por `203.0.113.2`) en lugar de asumir `eth0`/`eth1`.
+- **Internet en el primer arranque.** Los contenedores instalan paquetes con `apk add` al iniciar: la primera vez necesitan salida a Internet.
+- **`ip_forward`.** Se habilita con `sysctls:` de Compose (más un `sysctl -w` tolerante), para funcionar aunque `/proc/sys` sea de solo lectura en el contenedor.
+- **Un laboratorio a la vez.** Varios labs comparten rangos de red (`172.30.1.0/24` y `203.0.113.0/24` entre `lab01`, `lab04` y el integrador), así que **no pueden estar levantados al mismo tiempo**: bajá uno antes de subir el que reutiliza esos rangos (`docker compose -f <archivo> down`).
+
+---
+
 ## 🗂️ Los 5 Entornos de Laboratorio Incluidos
 
 | Lab | Archivo Docker Compose | Qué vas a practicar en vivo |
@@ -64,7 +74,7 @@ docker compose -f labs/docker-compose.lab03-ospf-and-vrrp.yml up -d
 # 2. Ver los vecinos OSPF en estado FULL y la tabla de rutas OSPF en RTR2 (igual que en un Cisco real!):
 docker exec -it lab03-rtr2 vtysh -c "show ip ospf neighbor"
 docker exec -it lab03-rtr2 vtysh -c "show ip route ospf"
-# -> Observá cómo RTR2 llega a la red 10.3.40.0/24 de RTR3 a través de RTR1 (Costo 10 + 10 = 20)
+# -> Observá cómo RTR2 llega a 10.3.40.1/32 (la loopback del Data Center) a través de RTR1 (Costo 10 + 10 = 20)
 #    en lugar de usar el enlace directo lento (Costo 100)!
 
 # 3. SIMULACRO 1 (Failover OSPF en 1 segundo): Cortar el enlace principal eth0 de RTR2 y ver cómo salta al backup!

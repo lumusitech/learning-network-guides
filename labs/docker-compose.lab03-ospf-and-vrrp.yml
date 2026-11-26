@@ -19,7 +19,7 @@ services:
       p2p_r1_r2:
         ipv4_address: 10.0.255.1
       p2p_r1_r3:
-        ipv4_address: 10.0.255.9
+        ipv4_address: 10.0.255.17
     command: >
       sh -c "
         apk add --no-cache frr iproute2 iputils-ping tcpdump &&
@@ -28,16 +28,7 @@ services:
         ip addr add 10.0.0.1/32 dev lo &&
         ip addr add 10.1.10.1/24 dev lo &&
         /usr/lib/frr/frrinit.sh start &&
-        vtysh -c 'configure terminal' \
-              -c 'interface eth0' -c 'ip ospf network point-to-point' -c 'ip ospf cost 10' -c 'exit' \
-              -c 'interface eth1' -c 'ip ospf network point-to-point' -c 'ip ospf cost 10' -c 'exit' \
-              -c 'router ospf' \
-              -c 'ospf router-id 10.0.0.1' \
-              -c 'passive-interface lo' \
-              -c 'network 10.0.0.1/32 area 0' \
-              -c 'network 10.1.10.0/24 area 0' \
-              -c 'network 10.0.255.0/24 area 0' \
-              -c 'end' -c 'write memory' &&
+        vtysh -c 'configure terminal' -c 'interface eth0' -c 'ip ospf network point-to-point' -c 'ip ospf cost 10' -c 'exit' -c 'interface eth1' -c 'ip ospf network point-to-point' -c 'ip ospf cost 10' -c 'exit' -c 'router ospf' -c 'ospf router-id 10.0.0.1' -c 'passive-interface lo' -c 'network 10.0.0.1/32 area 0' -c 'network 10.1.10.0/24 area 0' -c 'network 10.0.255.0/24 area 0' -c 'end' -c 'write memory' &&
         echo '=== RTR1-CENTRAL (OSPF Router-ID 10.0.0.1) LISTO ===' &&
         tail -f /dev/null
       "
@@ -51,7 +42,7 @@ services:
       p2p_r1_r2:
         ipv4_address: 10.0.255.2
       p2p_r2_r3:
-        ipv4_address: 10.0.255.5
+        ipv4_address: 10.0.255.10
     command: >
       sh -c "
         apk add --no-cache frr iproute2 iputils-ping tcpdump &&
@@ -60,16 +51,7 @@ services:
         ip addr add 10.0.0.2/32 dev lo &&
         ip addr add 10.2.10.1/24 dev lo &&
         /usr/lib/frr/frrinit.sh start &&
-        vtysh -c 'configure terminal' \
-              -c 'interface eth0' -c 'ip ospf network point-to-point' -c 'ip ospf cost 10' -c 'exit' \
-              -c 'interface eth1' -c 'ip ospf network point-to-point' -c 'ip ospf cost 100' -c 'exit' \
-              -c 'router ospf' \
-              -c 'ospf router-id 10.0.0.2' \
-              -c 'passive-interface lo' \
-              -c 'network 10.0.0.2/32 area 0' \
-              -c 'network 10.2.10.0/24 area 0' \
-              -c 'network 10.0.255.0/24 area 0' \
-              -c 'end' -c 'write memory' &&
+        vtysh -c 'configure terminal' -c 'interface eth0' -c 'ip ospf network point-to-point' -c 'ip ospf cost 10' -c 'exit' -c 'interface eth1' -c 'ip ospf network point-to-point' -c 'ip ospf cost 100' -c 'exit' -c 'router ospf' -c 'ospf router-id 10.0.0.2' -c 'passive-interface lo' -c 'network 10.0.0.2/32 area 0' -c 'network 10.2.10.0/24 area 0' -c 'network 10.0.255.0/24 area 0' -c 'end' -c 'write memory' &&
         echo '=== RTR2-SUCURSAL (OSPF Router-ID 10.0.0.2) LISTO ===' &&
         tail -f /dev/null
       "
@@ -81,9 +63,9 @@ services:
     privileged: true
     networks:
       p2p_r1_r3:
-        ipv4_address: 10.0.255.10
+        ipv4_address: 10.0.255.18
       p2p_r2_r3:
-        ipv4_address: 10.0.255.6
+        ipv4_address: 10.0.255.11
     command: >
       sh -c "
         apk add --no-cache frr iproute2 iputils-ping tcpdump &&
@@ -92,16 +74,7 @@ services:
         ip addr add 10.0.0.3/32 dev lo &&
         ip addr add 10.3.40.1/24 dev lo &&
         /usr/lib/frr/frrinit.sh start &&
-        vtysh -c 'configure terminal' \
-              -c 'interface eth0' -c 'ip ospf network point-to-point' -c 'ip ospf cost 10' -c 'exit' \
-              -c 'interface eth1' -c 'ip ospf network point-to-point' -c 'ip ospf cost 100' -c 'exit' \
-              -c 'router ospf' \
-              -c 'ospf router-id 10.0.0.3' \
-              -c 'passive-interface lo' \
-              -c 'network 10.0.0.3/32 area 0' \
-              -c 'network 10.3.40.0/24 area 0' \
-              -c 'network 10.0.255.0/24 area 0' \
-              -c 'end' -c 'write memory' &&
+        vtysh -c 'configure terminal' -c 'interface eth0' -c 'ip ospf network point-to-point' -c 'ip ospf cost 10' -c 'exit' -c 'interface eth1' -c 'ip ospf network point-to-point' -c 'ip ospf cost 100' -c 'exit' -c 'router ospf' -c 'ospf router-id 10.0.0.3' -c 'passive-interface lo' -c 'network 10.0.0.3/32 area 0' -c 'network 10.3.40.0/24 area 0' -c 'network 10.0.255.0/24 area 0' -c 'end' -c 'write memory' &&
         echo '=== RTR3-DATACENTER (OSPF Router-ID 10.0.0.3) LISTO ===' &&
         tail -f /dev/null
       "
@@ -112,13 +85,16 @@ networks:
     ipam:
       config:
         - subnet: 10.0.255.0/29
+          gateway: 10.0.255.6
   p2p_r2_r3:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.0.255.4/30
+        - subnet: 10.0.255.8/29
+          gateway: 10.0.255.14
   p2p_r1_r3:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.0.255.8/29
+        - subnet: 10.0.255.16/29
+          gateway: 10.0.255.22
