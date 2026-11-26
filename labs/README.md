@@ -6,6 +6,15 @@ Topologías reproducibles con **Docker Compose**, **FRRouting (`vtysh` estilo Ci
 
 ---
 
+## ⚙️ Requisitos y limitaciones del entorno
+
+- **Host Docker sobre Linux (recomendado).** Los labs usan `NET_ADMIN`/`privileged`, `iptables`, `sysctls` y (en el lab integrador) túneles **WireGuard/GRE**. En **Docker Desktop / WSL2** algunos labs de **NAT/DNAT y ruteo entre bridges** no reproducen su comportamiento esperado, porque el host interfiere en el ruteo entre redes; para esas prácticas conviene un **host Docker Linux nativo**.
+- **Orden de interfaces no garantizado.** Docker Compose asigna las interfaces de un servicio **en orden alfabético por nombre de red** (no por el orden en que se declaran). Por eso los labs que dependen de una interfaz concreta la **detectan por su IP** al arrancar (p. ej. la WAN por `203.0.113.2`) en lugar de asumir `eth0`/`eth1`.
+- **Internet en el primer arranque.** Los contenedores instalan paquetes con `apk add` al iniciar: la primera vez necesitan salida a Internet.
+- **`ip_forward`.** Se habilita con `sysctls:` de Compose (más un `sysctl -w` tolerante), para funcionar aunque `/proc/sys` sea de solo lectura en el contenedor.
+
+---
+
 ## 🗂️ Los 5 Entornos de Laboratorio Incluidos
 
 | Lab | Archivo Docker Compose | Qué vas a practicar en vivo |

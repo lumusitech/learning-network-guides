@@ -27,7 +27,9 @@ services:
       sh -c "
         apk add --no-cache iproute2 iptables nftables conntrack-tools tcpdump curl &&
         (sysctl -w net.ipv4.ip_forward=1 2>/dev/null || true) &&
-        iptables -t nat -A POSTROUTING -o eth0 -j SNAT --to-source 203.0.113.2 &&
+        WAN=$$(ip -o -4 addr show | grep 203.0.113.2/ | awk '{print $$2}') &&
+        echo 'Interfaz WAN detectada:' $$WAN &&
+        iptables -t nat -A POSTROUTING -o $$WAN -j SNAT --to-source 203.0.113.2 &&
         iptables -t nat -A PREROUTING -d 203.0.113.2 -p tcp --dport 8080 -j DNAT --to-destination 10.1.40.10:8080 &&
         echo '=== FW-BORDE (WAN: 203.0.113.2 | LAN: 10.1.40.254) LISTO ===' &&
         echo 'NOTA: El Port Forwarding (203.0.113.2:8080 -> 10.1.40.10:8080) está activo,' &&
