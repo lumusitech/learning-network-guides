@@ -168,6 +168,39 @@ Pensá en esto como **una oficina grande de planta abierta (la VLAN) donde cada 
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. Cuando una trama entra a un switch, ¿qué campo usa para aprender y qué campo usa para decidir el reenvío, y cuándo hace Flooding?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El switch **aprende siempre mirando la `MAC Origen`** y anota en su tabla CAM en qué puerto y VLAN vive esa MAC. Luego **decide mirando la `MAC Destino`**: si ya la conoce, hace Forwarding solo por ese puerto; si es Broadcast, Multicast o un **Unicast desconocido** (aún no está en la tabla), hace **Flooding** por todos los puertos de la VLAN menos el de entrada. Si el destino está en el mismo puerto de entrada o el FCS está corrupto, descarta la trama.
+
+</details>
+
+**2. ¿Por qué puede desaparecer de la tabla MAC del switch un equipo que sigue encendido y conectado, y qué truco usás para localizarlo?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+La tabla CAM tiene un **Aging Time de 300 segundos (5 minutos)** por defecto: si un equipo permanece en silencio, el switch borra su entrada para ahorrar memoria. Por eso una impresora o PC inactiva no aparece. El truco es hacer primero un `ping` a su IP (aunque tenga firewall responderá al ARP en Capa 2) y recién después consultar la tabla MAC, que ya tendrá la entrada refrescada.
+
+</details>
+
+**3. En ARP, ¿por qué el `Request` es Broadcast y el `Reply` es Unicast, y para qué sirve un Gratuitous ARP en un failover?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El `ARP Request` debe ir en Broadcast (`FF:FF:FF:FF:FF:FF`) porque quien pregunta no conoce la MAC del dueño de la IP, y solo el destinatario responde con un `ARP Reply` en Unicast directo a la MAC del solicitante. El **Gratuitous ARP** es un anuncio no solicitado con el que un equipo declara su propia IP y MAC; en failover VRRP/HSRP lo dispara el router que asume la IP virtual para que switches y PCs actualicen sus tablas al instante en lugar de esperar hasta 5 minutos.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`physical-layer-cables-fiber-poe`](physical-layer-cables-fiber-poe.md) — Capa 1: cómo llegan físicamente las tramas Ethernet al puerto del switch

@@ -166,6 +166,39 @@ Si el camión tiene una rueda pinchada en la autopista (Capa 1) o lo cargaron en
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. Un paquete cruza un router entre dos VLANs. ¿Qué campos de la cabecera cambian y cuáles se mantienen intactos?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El router **destruye la cabecera de Capa 2**: cambian la **MAC Origen** (pasa a ser la de la interfaz de salida) y la **MAC Destino** (el próximo salto). En Capa 3 se mantienen la **IP Origen y la IP Destino** (salvo NAT) y el **TTL resta 1**. El switch L2, en cambio, no toca MACs ni mira el TTL.
+
+</details>
+
+**2. Un servicio responde `Connection Refused` y otro da `Connection Timed Out`. ¿Qué te dice cada síntoma sobre las capas?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+**`Connection Refused`** es un `TCP RST`: las Capas 1, 2 y 3 funcionan de ida y vuelta y llegaste al host, pero nadie escucha en ese puerto. **`Connection Timed Out`** es silencio: el paquete se perdió (ruta faltante, VLAN rota o firewall haciendo `DROP`) y el cliente queda en `SYN_SENT`.
+
+</details>
+
+**3. El router no hace ping a una cámara en su propia VLAN y su MAC aparece aprendida en `VID 1` en vez de `VID 100`. ¿Causa raíz y solución?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El puerto se agregó a la lista de VLANs pero **no se le cambió el `pvid`**. Como la cámara manda tramas *untagged*, el switch las metió en la VLAN 1 por defecto y el router nunca resuelve ARP en la VLAN correcta. Se corrige con `pvid=100` en `/interface bridge port`; el firewall no tenía nada que ver.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`how-to-think-like-network-engineer`](how-to-think-like-network-engineer.md) — Metodología de diagnóstico y los 3 planos (Datos, Control y Gestión)

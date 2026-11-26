@@ -197,6 +197,39 @@ Pensá en esto como **un servicio de camiones de mudanza (TCP) que sale desde un
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. Si el enlace WAN es PPPoE (`MTU = 1492`), ¿cuál es el `MSS` máximo que entra sin fragmentar y qué hace exactamente la regla de TCP MSS Clamping?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El `MSS` es `1452 bytes` (`1492 − 20 B IP − 20 B TCP`). El MSS Clamping intercepta el primer paquete `TCP SYN` de la PC —que anuncia `MSS = 1460` heredado de la LAN de `1500`— y lo reescribe a un valor que cabe en el tubo real, usando `action=change-mss new-mss=clamp-to-pmtu`. Así el servidor remoto nunca envía segmentos que no entren en la PPPoE.
+
+</details>
+
+**2. Un usuario dice que "el ping anda y Google abre, pero las páginas HTTPS pesadas se congelan en blanco". ¿Cuál es el mecanismo detrás de ese síntoma y qué mensaje ICMP no debés bloquear nunca?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Es el *agujero negro de MTU (PMTUD Blackhole)*: los paquetes chicos (ping, `SYN`) pasan, pero el paquete grande con el certificado TLS viene con el bit `DF=1` y no entra en el MTU reducido del túnel o PPPoE. El mensaje que jamás hay que bloquear es **`ICMP Type 3 Code 4 (Fragmentation Needed)`**, porque es el que avisa al emisor que debe bajar el tamaño de paquete.
+
+</details>
+
+**3. Publicaste un servidor interno por Port Forwarding (`DNAT`) y entra perfecto desde 4G, pero desde las PCs de la misma oficina del WiFi no carga. ¿Cómo se llama el problema y cuál es la solución?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Es el *Triángulo Roto* que resuelve el **Hairpin NAT (*NAT Loopback*)**: el `DNAT` deja la IP origen interna intacta, el servidor contesta directo por Capa 2 y la PC rechaza la respuesta por venir de una IP distinta a la que consultó (`TCP RST`). La solución es aplicar `DNAT` + `SNAT` juntos (Hairpin NAT) o usar **Split-Horizon DNS** para que adentro resuelva a la IP privada.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`osi-and-tcp-ip-models`](osi-and-tcp-ip-models.md) — El diagrama byte a byte donde se ve cómo encajan el Header IP (`20B`), el Header TCP (`20B`) y el Payload (`MSS = 1460B`) adentro del `MTU = 1500B`

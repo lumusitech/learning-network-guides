@@ -140,6 +140,39 @@ Pensá en esto como **ampliar un puente de 1 solo carril a una autopista de 4 ca
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. Armás un LACP `802.3ad` de 4 × 1 Gbps, copiás un ISO de una PC al servidor y no pasa de `112 MB/s`. ¿Está roto el enlace?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+No. El estándar **prohíbe repartir los paquetes de una misma conversación TCP** por cables distintos, porque llegarían desordenados (*Out-of-Order*) y TCP pediría retransmisiones. El algoritmo de **Hash** asigna un cable fijo por flujo: una sola conversación usa 1 Gbps, pero muchas conversaciones en paralelo suman los 4 Gbps.
+
+</details>
+
+**2. Ponés LACP `Passive` en ambos extremos del enlace. ¿Se forma el grupo? ¿Por qué?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+No se forma. Los dos lados quedan en silencio esperando que el otro envíe LACPDUs primero, así que nunca negocian. Necesitás al menos un extremo en **`Active`** (`Active`+`Active` o `Active`+`Passive`) para que arranque el intercambio de LACPDUs a `01:80:C2:00:00:02`.
+
+</details>
+
+**3. En un Cisco configurás `channel-group 1 mode on` y en el Aruba no tocás LACP. El piso pierde el 50% de los paquetes. ¿Cuál es la causa raíz?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El `mode on` es **estático sin protocolo**: el Cisco manda la mitad de las tramas por cada puerto a ciegas. El Aruba ve dos cables sueltos en paralelo, RSTP detecta el bucle y bloquea un puerto, tirando el 50% del tráfico. Se corrige pasando el Cisco a `mode active` y agrupando el Aruba con `trunk 23-24 trk1 lacp`.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`spanning-tree-and-loop-prevention`](spanning-tree-and-loop-prevention.md) — Por qué sin LACP Spanning Tree bloquea los cables paralelos para evitar tormentas

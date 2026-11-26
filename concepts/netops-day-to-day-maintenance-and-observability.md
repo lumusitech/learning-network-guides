@@ -159,6 +159,39 @@ Pensá en esto como **el mantenimiento y la bitácora de vuelo de un avión come
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. Se quema un router y tenés que restaurar su configuración en otro modelo distinto. ¿Por qué el `.backup` binario no te sirve?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El `.backup` binario es un volcado crudo atado al modelo de hardware (certificados, claves y **MACs incluidas**); en otro equipo deja interfaces descalzadas y clona direcciones MAC que rompen la Capa 2. El **`.rsc` / `running-config` en texto plano** se lee y adapta, y con él migrás en minutos sin arrastrar MACs viejas.
+
+</details>
+
+**2. Si el router ya guarda logs en su memoria interna, ¿por qué igual necesitás un servidor Syslog externo?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Porque la RAM local **se vacía al reiniciar**: si el equipo se reinicia solo a las 03:00 AM, perdés la evidencia de la causa. El Syslog externo (`UDP/TCP 514`) es la *caja negra*: sobrevive al reinicio y guarda logins, puertos caídos y caídas de vecinos OSPF aunque el router se apague.
+
+</details>
+
+**3. En `/system routerboard print` ves `current-firmware: 6.48.6` y `upgrade-firmware: 7.16.1`. ¿Qué falta hacer?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Falta actualizar el **RouterBOOT** (bootloader). Actualizaste RouterOS pero no el firmware de placa: hay que ejecutar `/system routerboard upgrade` y hacer un **segundo `reboot`** para que `current-firmware` iguale a `upgrade-firmware` y se eviten bugs de arranque o de puertos SFP.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`how-to-think-like-network-engineer`](how-to-think-like-network-engineer.md) — El punto de partida: los 3 planos (Datos, Control y Gestión), metodologías de diagnóstico y uso de Safe Mode / reload in

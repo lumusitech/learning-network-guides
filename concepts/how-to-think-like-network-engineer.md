@@ -154,6 +154,39 @@ Y antes de cerrar una llave maestra a distancia, siempre deja un resorte de segu
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. ¿Cuáles son los 3 planos de un equipo de red y qué síntoma delata la falla de cada uno?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El **Plano de Datos** (ASIC/Switch Chip) mueve los paquetes de usuario consultando CAM y FIB: si falla, hay pérdida de paquetes o lentitud aunque el equipo responda al ping. El **Plano de Control** (CPU/RAM) corre ARP, STP, OSPF o VRRP: si falla, se ve CPU al 100% y caída de vecinos o bucles L2. El **Plano de Gestión** (SSH, WinBox, SNMP) permite administrar: si falla, no entrás al equipo pero los usuarios siguen navegando.
+
+</details>
+
+**2. El usuario dice "puedo navegar por YouTube, pero no abre el sistema ERP interno". ¿Qué metodología de diagnóstico elegís y por qué?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Conviene un enfoque **Top-Down** (de Capa 7 hacia abajo), porque el hecho de que navegue por Internet ya te indica que las Capas 1, 2 y 3 locales están sanas; el embudo arranca en la aplicación (`curl`, `dig`). El **Bottom-Up** (L1→L7) se reserva para cuando "nada funciona" o acabás de cablear, y el **Divide and Conquer** (bisección con `ping`/`traceroute` a mitad de camino) sirve para descartar capas enteras rápidamente.
+
+</details>
+
+**3. Vas a modificar por SSH una VLAN o una regla de firewall `INPUT` que puede cortarte el acceso. ¿Qué salvavidas activás antes y por qué no guardás la configuración de entrada?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Activás el mecanismo de reversión automática del fabricante: **Safe Mode** en MikroTik (`Ctrl+X` o botón en WinBox) o **`reload in 10`** en Cisco IOS (se cancela con `reload cancel`). Si perdés la sesión, el timer expira y el equipo **revierte solo** al estado anterior sin que tengas que viajar al sitio. No guardás en memoria no volátil antes de confirmar porque, si el cambio te bloqueó, ya no podrías deshacerlo tras un reinicio.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`osi-and-tcp-ip-models`](osi-and-tcp-ip-models.md) — El mapa detallado de las 7 capas, cabeceras y encapsulamiento

@@ -183,6 +183,39 @@ Pensá en esto como **el código postal y la numeración de lotes de un barrio c
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. Tenés que unir dos routers con un cable punto a punto. ¿Por qué conviene un `/30` o `/31` en vez de gastar un `/24`?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Porque el enlace solo necesita 2 puntas (`.1` y `.2`). Un `/30` da 4 direcciones (2 útiles) y un `/31` (`RFC 3021`) ofrece 2 útiles sin reservar red ni broadcast. Un `/24` desperdicia `252` direcciones y abre la puerta a *ARP exhaustion* si alguien escanea esas IPs vacías.
+
+</details>
+
+**2. Una cámara IP recién instalada aparece con una IP `169.254.x.x` y sin Default Gateway. ¿Qué está pasando y dónde mirás?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Es **APIPA** (`RFC 3927`): el cliente pidió IP por DHCP y nadie respondió, así que se autoasignó una dirección link-local `169.254.0.0/16`. Hay que revisar el servidor DHCP o el **PVID/Trunk** de la VLAN en el switch (una trama *untagged* cayendo en la VLAN equivocada explica el fallo).
+
+</details>
+
+**3. En MikroTik escribís `/ip address add address=10.1.10.1 interface=vlan10` y el gateway "no anda". ¿Cuál es el error y cómo lo detectás?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Te olvidaste el `/24` al final, por lo que RouterOS asume **`/32`** (un solo host): el router se hace ping a sí mismo pero cree que su red termina en `.1`, así que ninguna PC de `10.1.10.0/24` lo usa como gateway. Lo detectás cuando `/ip address print` muestra `address=10.1.10.1/32 network=10.1.10.1` en vez de `network=10.1.10.0`.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`osi-and-tcp-ip-models`](osi-and-tcp-ip-models.md) — Cómo el paquete IPv4 de Capa 3 viaja adentro de la trama Ethernet de Capa 2

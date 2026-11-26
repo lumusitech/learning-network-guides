@@ -166,6 +166,39 @@ Pensá en esto como **el proceso de ingreso cuando llegás por primera vez a tra
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. ¿Por qué los pasos `Discover` y `Request` del ciclo DORA viajan en Broadcast, y qué riesgo concreto habilita eso en una LAN de oficina?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El cliente arranca sin IP (`0.0.0.0`) y sin saber quién es el servidor DHCP, por lo que debe gritar en Broadcast (`255.255.255.255` / `FF:FF:FF:FF:FF:FF`) desde `UDP 68` hacia `UDP 67`. Ese grito lo escucha cualquier servidor de la VLAN, así que un *Rogue DHCP* (por ejemplo un router hogareño enchufado por su puerto LAN) puede ganarle de mano al servidor legítimo y entregar IPs y gateway falsos. La mitigación es **DHCP Snooping** con el puerto Trunk hacia el router marcado como `trusted`.
+
+</details>
+
+**2. El servidor DHCP central vive en la `VLAN 40` y debe asignar IPs a la `VLAN 10`. ¿Cómo sabe el servidor de qué pool entregar si el Broadcast no cruza el router?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El router de la VLAN 10 tiene configurado **DHCP Relay (`ip helper-address 10.1.40.10`)**: frena el Broadcast, lo convierte en Unicast y le estampa el campo **GIADDR** con la IP de la interfaz de entrada (`10.1.10.1`). El servidor lee ese GIADDR y deduce que la petición viene de la red `10.1.10.0/24`, entregando una IP de ese pool. Sin el relay, las PCs de otras VLAN nunca recibirían IP.
+
+</details>
+
+**3. ¿Por qué es un antipatrón entregar por DHCP `8.8.8.8` como DNS secundario a PCs que pertenecen a un dominio Active Directory?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Los clientes Windows no usan el DNS secundario solo cuando el primario muere: ante una demora mínima cambian a `8.8.8.8` y consultan ahí. Como Google desconoce el dominio interno (`miempresa.local`), responde `NXDOMAIN` y se rompen las GPO, las carpetas compartidas y el inicio de sesión de AD. La regla de oro es entregar **solo DNS internos** (o el router) y que esos reenvíen a `1.1.1.1` / `8.8.8.8` las consultas de Internet.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`ipv4-addressing-subnetting-and-vlsm`](ipv4-addressing-subnetting-and-vlsm.md) — Cómo organizar cada subred `/24` dejando rangos separados para IPs estáticas, reservas y pool DHCP

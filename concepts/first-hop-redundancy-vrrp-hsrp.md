@@ -169,6 +169,39 @@ Pensá en esto como **el puesto de guardia en la única puerta de salida de una 
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. En VRRP, ¿qué decide quién es el `Master` y qué debe hacer el router `Backup` para que las PCs no noten el recambio?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Gana quien tenga la **prioridad más alta** (por defecto `100`; al revés que en Spanning Tree). El `Master` envía latidos multicast a `224.0.0.18` (protocolo IP `112`) cada `1 segundo`, y si el `Backup` no los escucha durante unos `3 segundos`, se proclama nuevo `Master` y lanza un **Gratuitous ARP**. Gracias a que ambos comparten la misma `MAC Virtual` (`00:00:5E:00:01:<VRID>`), las PCs no tienen que actualizar su caché ARP: solo el switch reubica esa MAC.
+
+</details>
+
+**2. Tenés VRRP bien configurado, pero al cortarse la fibra WAN del router Master toda la empresa se queda sin Internet teniendo el router Backup sano. ¿Qué falta y cómo se resuelve?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Falta el **WAN Tracking**. VRRP solo vigila que el router siga vivo del lado de la LAN; si se cae su salida a Internet pero su interfaz LAN sigue activa, continúa enviando latidos con su prioridad alta y el `Backup` nunca asume. La solución es asociar un Track Object o IP SLA a la interfaz WAN que **reste puntos a la prioridad** (por ejemplo `200 - 150 = 50`), para que el router con prioridad `100` gane el rol automáticamente.
+
+</details>
+
+**3. Estás ante un *Split-Brain* (Doble Master): ambos routers figuran como `Master`. ¿Cuáles son las causas más probables y qué síntoma ves en la LAN?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Ocurre porque los latidos multicast `224.0.0.18` no llegan de un router al otro: una **VLAN ausente en el trunk**, un firewall `INPUT` que bloquea el **protocolo IP `112`**, un *IGMP Snooping* mal configurado, o diferencias de `vrid`, contraseña o `version` (por ejemplo v3 en un router y v2 en el otro). Con los dos enviando anuncios con la misma MAC virtual, la tabla CAM del switch sufre **MAC Flapping** constante y se pierden paquetes y se cortan las sesiones TCP de forma intermitente.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`routing-fundamentals-static-and-dynamic`](routing-fundamentals-static-and-dynamic.md) — Cómo se combina VRRP/HSRP del lado LAN con el enrutamiento estático o dinámico (OSPF) del lado WAN

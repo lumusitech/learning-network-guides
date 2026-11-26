@@ -169,6 +169,39 @@ Pensá en esto como **un sistema de micrófonos y parlantes en un salón de acto
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. ¿Por qué un bucle de rutas en Capa 3 se detiene solo, mientras que un bucle en Capa 2 entre switches puede tumbar toda la red?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El paquete IP (Capa 3) tiene el campo `TTL`: tras dar las vueltas del bucle llega a `0` y el router lo descarta. La trama Ethernet (Capa 2) **no tiene TTL**, así que gira infinitamente. Un solo `ARP Request` en broadcast se reenvía por todos los puertos del anillo y se multiplica exponencialmente hasta saturar el ancho de banda (*Broadcast Storm*) y provocar *flapping* de la tabla MAC.
+
+</details>
+
+**2. Todos los switches están en su prioridad de fábrica `32768`. ¿Quién gana la elección de Root Bridge y cómo lo evitás en producción?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+A igual prioridad, el Bridge ID desempata por la **dirección MAC más baja**, que suele ser el switch más viejo de la empresa. La regla profesional es fijar manualmente el Switch Core con prioridad `4096` (`0x1000`) y el Core secundario con `8192` (`0x2000`). En MikroTik se escribe en hexadecimal: `priority=0x1000`.
+
+</details>
+
+**3. ¿Qué rol cumplen `PortFast / Edge Port` y `BPDU Guard` en una boca de usuario, y qué pasa si falta cada uno?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+`PortFast / Edge` pasa el puerto a `Forwarding` al instante, evitando que la PC espere ~30 s por STP y falle el pedido de IP por DHCP. `BPDU Guard` apaga (`err-disabled`) el puerto si recibe una BPDU, es decir si alguien enchufó un switch o armó un bucle. Sin PortFast hay demoras al arrancar; sin BPDU Guard, un bucle en una sola oficina puede dejar sin red a todo el edificio.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`ethernet-mac-and-arp`](ethernet-mac-and-arp.md) — Por qué el Flooding de tramas Broadcast y Unknown Unicast dispara las tormentas cuando hay un bucle
