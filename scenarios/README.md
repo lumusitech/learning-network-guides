@@ -6,7 +6,7 @@ Casos reales del día a día resueltos paso a paso: desde el síntoma inicial re
 
 ---
 
-## 🗂️ Catálogo de escenarios por dominio (20/20 Completados)
+## 🗂️ Catálogo de escenarios por dominio (21/21 Completados)
 
 ### 1. `l1-l2/` — Incidentes de Capa Física y Switching Capa 2
 
@@ -52,6 +52,7 @@ Casos reales del día a día resueltos paso a paso: desde el síntoma inicial re
 | 01 | [`01-flat-network-to-vlans-zero-downtime-migration.md`](maintenance/01-flat-network-to-vlans-zero-downtime-migration.md) | 🔴 Avanzado | Migrar una red plana (`192.168.1.0/24`) a VLANs separadas (Datos, Servidores, CCTV, WiFi) sin frenar la empresa |
 | 02 | [`02-core-switch-replacement-and-config-translation.md`](maintenance/02-core-switch-replacement-and-config-translation.md) | 🟡 Intermedio | Reemplazar un switch principal traduciendo su configuración (Cisco ↔ MikroTik ↔ Aruba) con verificación de impacto |
 | 03 | [`03-remote-router-firmware-upgrade-and-recovery-drill.md`](maintenance/03-remote-router-firmware-upgrade-and-recovery-drill.md) | 🟡 Intermedio | Actualizar firmware de un router remoto crítico con pre-checks, backup `.rsc` y plan de rollback probado |
+| 04 | [`04-integrative-capstone-enterprise-network.md`](maintenance/04-integrative-capstone-enterprise-network.md) | 🔴 Avanzado | **Proyecto Integrador Capstone:** construir y operar una empresa multi-sede completa (VLANs, VRRP, firewall Zero-Trust, VPN y OSPF) en 5 fases con checklist de 25 pruebas |
 
 ---
 

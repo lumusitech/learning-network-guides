@@ -15,9 +15,9 @@ Sistema de aprendizaje práctico para **ingeniería, administración y operació
 |-----------|:--------:|
 | 🧠 [Conceptos y Modelos Mentales](concepts/) | **14** |
 | 🛠️ [Guías Prácticas Multi-Vendor](guides/) | **24** |
-| 🚨 [Escenarios Reales y Runbooks](scenarios/) | **20** |
+| 🚨 [Escenarios Reales y Runbooks](scenarios/) | **21** |
 | 📚 [Referencias Rápidas y Cheatsheets](reference/) | **7** |
-| 🧪 [Entornos de Laboratorio Docker / FRR](labs/) | **4** |
+| 🧪 [Entornos de Laboratorio Docker / FRR](labs/) | **5** |
 
 ---
 
@@ -44,13 +44,13 @@ Sistema de aprendizaje práctico para **ingeniería, administración y operació
 │   ├── 06-mikrotik/         # Especialización RouterOS v7: Setup limpio + Puerto Rescate, Bridge VLAN Filtering (H), QoS/PCQ/fq-codel
 │   ├── 07-cisco/            # Especialización Cisco IOS: Arquitectura CLI/Hardening, Recuperación ROMMON (0x2142) e imágenes IOS
 │   └── 08-operations/       # Día a día: Backups .rsc en Git, Upgrades de Firmware en 4 fases, Monitoreo SNMPv3/Syslog/NetFlow
-├── labs/              # 4 laboratorios Docker Compose + FRRouting para practicar VLANs, STP, OSPF (ExStart) y Hairpin NAT
-├── scenarios/         # 20 incidentes y ventanas de mantenimiento reales resueltos paso a paso
+├── labs/              # 5 laboratorios Docker Compose + FRRouting: VLANs/STP/OSPF/Hairpin y el Proyecto Integrador Multi-Sede
+├── scenarios/         # 21 incidentes y ventanas de mantenimiento reales resueltos paso a paso
 │   ├── l1-l2/               # Par cortado a 100Mbps (TDR), Tormenta STP, Native VLAN Mismatch, PoE nocturno, LACP roto, Fibra LOS
 │   ├── l3-routing/          # Blackhole de MTU/MSS en PPPoE/VPN, Ruta asimétrica (INVALID), OSPF ExStart, ISP Zombie, VRRP Split-Brain
 │   ├── security-vpn/        # Rogue DHCP en LAN, Hairpin NAT interno, VPN UP pero sin tráfico por NAT, Router expuesto a fuerza bruta
 │   ├── wireless/            # Sticky Clients pegados a AP lejano, Celular en "Obteniendo IP..." (169.254.x.x) en VLAN de SSID
-│   └── maintenance/         # Migración de red plana a VLANs sin corte, Reemplazo de Switch Core multi-vendor, Upgrade remoto a 250 km
+│   └── maintenance/         # Migración de red plana a VLANs sin corte, Reemplazo de Switch Core multi-vendor, Upgrade remoto, Proyecto Integrador Capstone
 └── reference/         # 7 cheatsheets de campo (Piedra Rosetta CLI, CIDR/VLSM/CGNAT, Fibra/SFP/PoE, IEEE/RFC, Puertos/Multicast, Matriz de Guardia, Active Recall)
 ```
 
@@ -91,7 +91,8 @@ entender → configurar → practicar → diagnosticar y mantener
 
 1. **Backups y Control de Cambios:** exportación automática en texto plano (`.rsc` / `running-config`) versionada en **Git** y rollback atómico (`configure replace`).
 2. **Actualizaciones de Firmware Seguras:** runbook de 4 fases para `RouterOS + RouterBOOT`, Cisco IOS y switches con doble partición.
-3. **Observabilidad y Runbooks de Guardia:** SNMPv3 (`ifHCInOctets`), Syslog centralizado, NetFlow/IPFIX y resolución paso a paso de los 20 incidentes más frecuentes en producción.
+3. **Observabilidad y Runbooks de Guardia:** SNMPv3 (`ifHCInOctets`), Syslog centralizado, NetFlow/IPFIX y resolución paso a paso de los 21 incidentes más frecuentes en producción.
+4. **Proyecto Integrador Capstone:** [`scenarios/maintenance/04-integrative-capstone-enterprise-network.md`](scenarios/maintenance/04-integrative-capstone-enterprise-network.md) — construí y operá una empresa multi-sede completa (VLANs, VRRP, firewall Zero-Trust, VPN site-to-site y OSPF) en 5 fases, con su laboratorio ejecutable en [`labs/docker-compose.integrative.yml`](labs/docker-compose.integrative.yml).
 
 ---
 
