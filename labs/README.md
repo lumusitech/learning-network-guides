@@ -6,7 +6,7 @@ Topologías reproducibles con **Docker Compose**, **FRRouting (`vtysh` estilo Ci
 
 ---
 
-## 🗂️ Los 4 Entornos de Laboratorio Incluidos
+## 🗂️ Los 5 Entornos de Laboratorio Incluidos
 
 | Lab | Archivo Docker Compose | Qué vas a practicar en vivo |
 |:---:|------------------------|-----------------------------|
@@ -14,6 +14,7 @@ Topologías reproducibles con **Docker Compose**, **FRRouting (`vtysh` estilo Ci
 | **02** | [`docker-compose.lab02-stp-and-lacp.yml`](docker-compose.lab02-stp-and-lacp.yml) | **Spanning Tree (`STP`)**, elección del **Root Bridge (`Priority 4096 vs 32768`)**, inspección de tramas BPDU (`01:80:C2:00:00:00`) y **Bonding LACP `802.3ad`** |
 | **03** | [`docker-compose.lab03-ospf-and-vrrp.yml`](docker-compose.lab03-ospf-and-vrrp.yml) | **3 Routers con consola `vtysh` (idéntica a Cisco IOS)** corriendo **OSPFv2 (`Area 0`)**, simulación de caída de fibra (failover por costo `10` vs `100`) y reproducción del fallo **`ExStart` por diferencia de MTU** |
 | **04** | [`docker-compose.lab04-nat-hairpin-mtu.yml`](docker-compose.lab04-nat-hairpin-mtu.yml) | **Port Forwarding (`DNAT`)**, reproducción del **"Triángulo Roto" del Hairpin NAT** (funciona desde `cliente-externo` pero falla desde `pc-interna`), solución en 1 línea, inspección de **Conntrack** y **TCP MSS Clamping** |
+| **05** | [`docker-compose.integrative.yml`](docker-compose.integrative.yml) | **Proyecto Integrador Capstone Multi-Sede:** 6 contenedores que unen **VLANs 802.1Q**, **Inter-VLAN**, **OSPFv2 sobre túnel site-to-site**, **Firewall + DNAT + Hairpin NAT** y **MSS Clamping** en una sola topología `Lumen Corp` |
 
 ---
 
@@ -116,9 +117,77 @@ docker compose -f labs/docker-compose.lab04-nat-hairpin-mtu.yml down
 
 ---
 
+### 🧪 Lab 05 — Proyecto Integrador Capstone "Lumen Corp" (6 contenedores)
+
+El laboratorio más completo del repositorio: une **Switching L2, Inter-VLAN, OSPFv2, túnel site-to-site, Firewall, NAT/Hairpin y MSS Clamping** en una topología de dos sedes. Es el entorno ejecutable del [Proyecto Integrador Capstone](../scenarios/maintenance/04-integrative-capstone-enterprise-network.md).
+
+```text
+                         INTERNET (wan_net 203.0.113.0/24)
+              cliente-wan .100        rtr-sede1 .2        rtr-sede2 .3
+                    |                     |                   |
+                    |              (tunel wg0 10.255.255.0/30) |
+                    |                     |<===== OSPF =======>|
+                    |              802.1Q Trunk               |
+                    |        +------------+                   |
+                    |        |  sw-core   |  (VLAN 99: .2)    |
+                    |        +--+------+--+                   |
+                    |   VLAN 10 |      | VLAN 40               | dummy0 10.2.40.1/24
+                    |     pc-staff     srv-erp                 | (LAN Sucursal)
+                    |     10.1.10.50   10.1.40.10:8080        |
+```
+
+```bash
+# 1. Levantar las dos sedes y esperar ~20 s a que suba WireGuard + OSPF:
+docker compose -f labs/docker-compose.integrative.yml up -d
+
+# 2. Verificar que el TUNEL quedó arriba (WireGuard) y que OSPF llego a FULL:
+docker exec -it rtr-sede1 wg show
+docker exec -it rtr-sede1 vtysh -c "show ip ospf neighbor"
+docker exec -it rtr-sede1 vtysh -c "show ip route ospf"
+# -> Debes ver el vecino 10.255.255.2 en 'Full/PointToPoint' y la ruta a 10.2.0.0/16.
+
+# 3. Inter-VLAN: la PC de Staff (VLAN 10) alcanza el ERP (VLAN 40):
+docker exec -it pc-staff curl -m 3 http://10.1.40.10:8080
+
+# 4. DNAT desde "Internet" y HAIRPIN desde adentro (misma URL publica):
+docker exec -it cliente-wan curl -m 3 http://203.0.113.2:8080
+docker exec -it pc-staff   curl -m 3 http://203.0.113.2:8080
+# -> Ambas deben responder el HTML del ERP. Inspeccionar conntrack:
+docker exec -it rtr-sede1 conntrack -L | grep 8080
+```
+
+**Drills "Break & Fix" del capstone (rompé y arreglá vos mismo):**
+
+```bash
+# DRILL A - MTU mismatch en el tunel (OSPF se traba en EXSTART):
+docker exec -it rtr-sede2 ip link set mtu 1300 dev wg0
+docker exec -it rtr-sede2 vtysh -c "clear ip ospf process"
+docker exec -it rtr-sede1 vtysh -c "show ip ospf neighbor"   # -> ExStart/Exchange!
+# Arreglo:
+docker exec -it rtr-sede2 ip link set mtu 1420 dev wg0
+docker exec -it rtr-sede2 vtysh -c "clear ip ospf process"
+
+# DRILL B - "Triangulo roto" del Hairpin: borrar la regla srcnat y ver que desde adentro falla:
+docker exec -it rtr-sede1 iptables -t nat -D POSTROUTING -s 10.1.40.0/24 -d 10.1.40.10 -p tcp --dport 8080 -j MASQUERADE
+docker exec -it pc-staff curl -m 3 http://203.0.113.2:8080   # -> Timeout (aunque desde Internet anda!)
+# Arreglo (volver a agregar la regla de Hairpin NAT):
+docker exec -it rtr-sede1 iptables -t nat -A POSTROUTING -s 10.1.40.0/24 -d 10.1.40.10 -p tcp --dport 8080 -j MASQUERADE
+
+# DRILL C - Verificar el MSS Clamping que evita el agujero negro de MTU por el tunel:
+docker exec -it rtr-sede1 iptables -t mangle -S FORWARD      # -> regla TCPMSS --clamp-mss-to-pmtu
+
+# 5. Apagar y limpiar el laboratorio al terminar:
+docker compose -f labs/docker-compose.integrative.yml down
+```
+
+> **Nota de compatibilidad:** el túnel se levanta con **WireGuard** (`wg0`, MTU `1420`). Si el kernel del host no expone el módulo WireGuard a contenedores, el arranque cae automáticamente a un **túnel GRE** con el mismo nombre, direccionamiento y MTU, de modo que el ejercicio de OSPF y MSS se mantiene idéntico.
+
+---
+
 ## 🔗 Ver también
 
 - [`guides/README.md`](../guides/README.md) — Las 24 guías de configuración multi-vendor que explican cada protocolo practicado aquí
-- [`scenarios/README.md`](../scenarios/README.md) — Los 20 runbooks de incidentes reales que podés simular en estos contenedores
+- [`scenarios/README.md`](../scenarios/README.md) — Los 21 runbooks de incidentes reales que podés simular en estos contenedores
+- [`scenarios/maintenance/04-integrative-capstone-enterprise-network.md`](../scenarios/maintenance/04-integrative-capstone-enterprise-network.md) — El Proyecto Integrador Capstone que este Lab 05 ejecuta de punta a punta
 
 ⬅️ [Volver al README principal](../README.md)

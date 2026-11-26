@@ -1,0 +1,219 @@
+# =============================================================================
+# LAB INTEGRADOR (CAPSTONE): Empresa Multi-Sede "Lumen Corp"
+# -----------------------------------------------------------------------------
+# Une TODO el repositorio en un solo entorno de 6 contenedores:
+#   Fase 1: VLANs 802.1Q (Access/Trunk/PVID) y Router-on-a-Stick (Inter-VLAN)
+#   Fase 2: Enrutamiento dinamico OSPFv2 (FRRouting / consola style Cisco vtysh)
+#   Fase 3: Firewall Stateful + NAT + Port Forwarding (DNAT) + Hairpin NAT + Conntrack
+#   Fase 4: Tunel Site-to-Site (WireGuard wg0 MTU 1420; fallback GRE) + OSPF point-to-point
+#   Fase 5: TCP MSS Clamping + verificacion end-to-end y backup de configuracion
+# =============================================================================
+# Uso:
+#   docker compose -f labs/docker-compose.integrative.yml up -d
+#   docker exec -it rtr-sede1 vtysh        # Router Sede Central (FRR, estilo Cisco IOS)
+#   docker exec -it rtr-sede2 vtysh        # Router Sucursal 2 (FRR, estilo Cisco IOS)
+#   docker exec -it sw-core sh             # Switch Core Capa 2 (bridge VLAN-aware)
+#   docker exec -it pc-staff sh            # PC de Staff (VLAN 10: 10.1.10.50)
+#   docker exec -it srv-erp sh             # Servidor ERP (VLAN 40: 10.1.40.10:8080)
+#   docker exec -it cliente-wan sh         # Cliente Externo / "Internet" (203.0.113.100)
+# =============================================================================
+
+services:
+  rtr-sede1:
+    image: alpine:3.20
+    container_name: rtr-sede1
+    hostname: rtr-sede1
+    privileged: true
+    networks:
+      wan_net:
+        ipv4_address: 203.0.113.2
+      lan_sede1:
+        ipv4_address: 172.30.1.2
+    command: >
+      sh -c "
+        apk add --no-cache frr iproute2 iptables wireguard-tools iputils-ping tcpdump conntrack-tools curl &&
+        sed -i 's/^ospfd=no/ospfd=yes/' /etc/frr/daemons &&
+        sysctl -w net.ipv4.ip_forward=1 &&
+        ip link add link eth1 name eth1.10  type vlan id 10  &&
+        ip link add link eth1 name eth1.20  type vlan id 20  &&
+        ip link add link eth1 name eth1.40  type vlan id 40  &&
+        ip link add link eth1 name eth1.99  type vlan id 99  &&
+        ip link add link eth1 name eth1.100 type vlan id 100 &&
+        ip link add link eth1 name eth1.200 type vlan id 200 &&
+        ip addr add 10.1.10.1/24  dev eth1.10  &&
+        ip addr add 10.1.20.1/24  dev eth1.20  &&
+        ip addr add 10.1.40.1/24  dev eth1.40  &&
+        ip addr add 10.1.99.1/24  dev eth1.99  &&
+        ip addr add 10.1.100.1/24 dev eth1.100 &&
+        ip addr add 10.1.200.1/24 dev eth1.200 &&
+        ip link set dev eth1.10 up  && ip link set dev eth1.20 up  && ip link set dev eth1.40 up &&
+        ip link set dev eth1.99 up  && ip link set dev eth1.100 up && ip link set dev eth1.200 up &&
+        printf '%s' 'AOfJZQdLSBMFalTFGCzKKvhkFnShrIetBkHN6+a2K2Q=' > /tmp/wg.key && chmod 600 /tmp/wg.key &&
+        ( ip link add dev wg0 type wireguard 2>/dev/null &&
+          ip addr add 10.255.255.1/30 dev wg0 &&
+          ip link set mtu 1420 dev wg0 &&
+          wg set wg0 private-key /tmp/wg.key peer 'w9c3Pbv4w8aVAX0J9Gt6NaS2AEggF9eY7uydnEl/bgg=' endpoint 203.0.113.3:51820 allowed-ips 10.2.0.0/16,10.255.255.0/30 persistent-keepalive 25 &&
+          ip link set dev wg0 up &&
+          echo 'FASE 4: Tunel site-to-site WireGuard wg0 ACTIVO (MTU 1420)' ) ||
+        ( ip tunnel add wg0 mode gre local 203.0.113.2 remote 203.0.113.3 ttl 64 &&
+          ip addr add 10.255.255.1/30 dev wg0 &&
+          ip link set mtu 1420 dev wg0 &&
+          ip link set dev wg0 up &&
+          echo 'FASE 4: WireGuard no disponible en el kernel -> fallback GRE wg0 (MTU 1420)' ) &&
+        iptables -t nat -A POSTROUTING -s 10.1.0.0/16 -o eth0 -j MASQUERADE &&
+        iptables -t nat -A POSTROUTING -s 10.1.40.0/24 -d 10.1.40.10 -p tcp --dport 8080 -j MASQUERADE &&
+        iptables -t nat -A PREROUTING  -d 203.0.113.2 -p tcp --dport 8080 -j DNAT --to-destination 10.1.40.10:8080 &&
+        iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu &&
+        /usr/lib/frr/frrinit.sh start &&
+        vtysh -c 'configure terminal' \
+              -c 'interface wg0' -c 'ip ospf network point-to-point' -c 'ip ospf cost 10' -c 'exit' \
+              -c 'router ospf' \
+              -c 'ospf router-id 10.255.255.1' \
+              -c 'passive-interface eth1.10' -c 'passive-interface eth1.20' -c 'passive-interface eth1.40' \
+              -c 'passive-interface eth1.99' -c 'passive-interface eth1.100' -c 'passive-interface eth1.200' \
+              -c 'network 10.1.0.0/16 area 0' \
+              -c 'network 10.255.255.0/30 area 0' \
+              -c 'end' -c 'write memory' &&
+        echo '=== RTR-SEDE1 (WAN 203.0.113.2 | LAN VLANs 10/20/40/99/100/200 | WG 10.255.255.1) LISTO ===' &&
+        echo 'NOTA: DNAT 203.0.113.2:8080 -> 10.1.40.10:8080 + Hairpin NAT ya configurados.' &&
+        tail -f /dev/null
+      "
+
+  sw-core:
+    image: alpine:3.20
+    container_name: sw-core
+    hostname: sw-core
+    cap_add:
+      - NET_ADMIN
+    networks:
+      lan_sede1:
+        ipv4_address: 172.30.1.3
+    command: >
+      sh -c "
+        apk add --no-cache iproute2 bridge iputils-ping tcpdump &&
+        ip link add name br0 type bridge vlan_filtering 1 &&
+        ip link set dev br0 up &&
+        ip link add link eth0 name eth0.99 type vlan id 99 &&
+        ip addr add 10.1.99.2/24 dev eth0.99 &&
+        ip link set dev eth0.99 up &&
+        ip route add default via 10.1.99.1 2>/dev/null || true &&
+        echo '=== SW-CORE (Bridge VLAN-aware, gestion en VLAN 99: 10.1.99.2) LISTO ===' &&
+        echo 'TIP: practica con  bridge vlan show  y  bridge fdb show' &&
+        tail -f /dev/null
+      "
+
+  rtr-sede2:
+    image: alpine:3.20
+    container_name: rtr-sede2
+    hostname: rtr-sede2
+    privileged: true
+    networks:
+      wan_net:
+        ipv4_address: 203.0.113.3
+    command: >
+      sh -c "
+        apk add --no-cache frr iproute2 iptables wireguard-tools iputils-ping tcpdump conntrack-tools curl &&
+        sed -i 's/^ospfd=no/ospfd=yes/' /etc/frr/daemons &&
+        sysctl -w net.ipv4.ip_forward=1 &&
+        ip link add dummy0 type dummy &&
+        ip addr add 10.2.40.1/24 dev dummy0 &&
+        ip link set dev dummy0 up &&
+        printf '%s' 'OPeKf4A9plsK9A6apQDuSCogQ9QGmdigSf4No3wB+kM=' > /tmp/wg.key && chmod 600 /tmp/wg.key &&
+        ( ip link add dev wg0 type wireguard 2>/dev/null &&
+          ip addr add 10.255.255.2/30 dev wg0 &&
+          ip link set mtu 1420 dev wg0 &&
+          wg set wg0 private-key /tmp/wg.key peer 'qX55LUUZyvWmUg87eaKHWRHMnTcQv5mG+qGxMoIE9zs=' endpoint 203.0.113.2:51820 allowed-ips 10.1.0.0/16,10.255.255.0/30 persistent-keepalive 25 &&
+          ip link set dev wg0 up &&
+          echo 'FASE 4: Tunel site-to-site WireGuard wg0 ACTIVO (MTU 1420)' ) ||
+        ( ip tunnel add wg0 mode gre local 203.0.113.3 remote 203.0.113.2 ttl 64 &&
+          ip addr add 10.255.255.2/30 dev wg0 &&
+          ip link set mtu 1420 dev wg0 &&
+          ip link set dev wg0 up &&
+          echo 'FASE 4: WireGuard no disponible en el kernel -> fallback GRE wg0 (MTU 1420)' ) &&
+        iptables -t mangle -A FORWARD -p tcp --tcp-flags SYN,RST SYN -j TCPMSS --clamp-mss-to-pmtu &&
+        /usr/lib/frr/frrinit.sh start &&
+        vtysh -c 'configure terminal' \
+              -c 'interface wg0' -c 'ip ospf network point-to-point' -c 'ip ospf cost 10' -c 'exit' \
+              -c 'router ospf' \
+              -c 'ospf router-id 10.255.255.2' \
+              -c 'passive-interface dummy0' \
+              -c 'network 10.2.0.0/16 area 0' \
+              -c 'network 10.255.255.0/30 area 0' \
+              -c 'end' -c 'write memory' &&
+        echo '=== RTR-SEDE2 (WAN 203.0.113.3 | LAN 10.2.40.0/24 | WG 10.255.255.2) LISTO ===' &&
+        tail -f /dev/null
+      "
+
+  pc-staff:
+    image: alpine:3.20
+    container_name: pc-staff
+    hostname: pc-staff
+    cap_add:
+      - NET_ADMIN
+    networks:
+      lan_sede1:
+        ipv4_address: 172.30.1.10
+    command: >
+      sh -c "
+        apk add --no-cache iproute2 iputils-ping curl tcpdump &&
+        ip link add link eth0 name eth0.10 type vlan id 10 &&
+        ip addr add 10.1.10.50/24 dev eth0.10 &&
+        ip link set dev eth0.10 up &&
+        ip route del default 2>/dev/null || true &&
+        ip route add default via 10.1.10.1 dev eth0.10 &&
+        echo '=== PC-STAFF (VLAN 10: 10.1.10.50/24 -> GW 10.1.10.1) LISTA ===' &&
+        tail -f /dev/null
+      "
+
+  srv-erp:
+    image: alpine:3.20
+    container_name: srv-erp
+    hostname: srv-erp
+    cap_add:
+      - NET_ADMIN
+    networks:
+      lan_sede1:
+        ipv4_address: 172.30.1.20
+    command: >
+      sh -c "
+        apk add --no-cache iproute2 python3 tcpdump &&
+        ip link add link eth0 name eth0.40 type vlan id 40 &&
+        ip addr add 10.1.40.10/24 dev eth0.40 &&
+        ip link set dev eth0.40 up &&
+        ip route del default 2>/dev/null || true &&
+        ip route add default via 10.1.40.1 dev eth0.40 &&
+        mkdir -p /srv/www &&
+        echo '<h1>Servidor ERP Lumen Corp (10.1.40.10:8080) - OK</h1>' > /srv/www/index.html &&
+        python3 -m http.server 8080 --directory /srv/www --bind 10.1.40.10 &
+        echo '=== SRV-ERP (VLAN 40: 10.1.40.10:8080 -> GW 10.1.40.1) LISTO ===' &&
+        tail -f /dev/null
+      "
+
+  cliente-wan:
+    image: alpine:3.20
+    container_name: cliente-wan
+    hostname: cliente-wan
+    cap_add:
+      - NET_ADMIN
+    networks:
+      wan_net:
+        ipv4_address: 203.0.113.100
+    command: >
+      sh -c "
+        apk add --no-cache iproute2 iputils-ping curl tcpdump &&
+        ip route add default via 203.0.113.2 2>/dev/null || true &&
+        echo '=== CLIENTE-WAN (Internet simulado: 203.0.113.100 -> GW 203.0.113.2) LISTO ===' &&
+        tail -f /dev/null
+      "
+
+networks:
+  wan_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 203.0.113.0/24
+  lan_sede1:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.1.0/24
