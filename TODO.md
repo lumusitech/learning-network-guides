@@ -155,3 +155,14 @@ Lee AGENTS.md, crea una rama `feat/validate-netops-ci-guardrails` desde `main` y
 | **4º** | **Prioridad 4** | **Diseño Físico de Racks, UPS y Matriz de Compra de Hardware** | Enseña cómo armar el rack unidad por unidad, calcular baterías UPS y elegir qué switch/router comprar |
 | **5º** | **Prioridad 5** | **IPv6 Dual-Stack Práctico (NDP/PD/Firewall) + eBGP Multi-Vendor** | Lleva al estudiante de redes corporativas a nivel Senior / Data Center / ISP |
 | **6º** | **Prioridad 6** | **Validador Automático `scripts/validate_netops.sh` en CI** | Blinda el repositorio contra enlaces rotos, comandos viejos de RouterOS v6 o pérdida de formato |
+
+---
+
+## 🔮 Nota al pie — Posible migración de plataforma (Fase 3)
+
+> **Idea a evaluar a futuro (fuera del alcance de las prioridades de esta fase):** migrar la **capa de entrega/consumo** del contenido a un sitio estático generado con **Astro** y estilado con **Tailwind CSS 4**, con enfoque **mobile-first** y **dark-mode-first**.
+
+- **Por qué:** hoy el material se lee en el visor Markdown de GitHub. Un sitio propio mejora la experiencia en el celular (navegación por capítulos, búsqueda, tabla de contenidos, resaltado de sintaxis y **tema oscuro por defecto**), sin perder la portabilidad del contenido.
+- **Cómo (sugerido):** Astro **Content Collections** (o `@astrojs/starlight`) renderizando directamente `concepts/`, `guides/`, `scenarios/`, `reference/` y `labs/`; **Tailwind 4** con *tokens* de tema y `prefers-color-scheme` / `class="dark"` como default.
+- **Regla de oro:** los archivos **Markdown siguen siendo la fuente de verdad**. El sitio se **genera desde** ellos; no se duplica ni se reescribe el contenido. `pnpm validate` (Markdownlint) sigue siendo el *gate* de calidad antes de publicar.
+- **Riesgo/beneficio:** suma un *build* (Node + Astro) y un despliegue (GitHub Pages / Netlify / Cloudflare), pero no toca la autoría ni la estructura pedagógica actual.
