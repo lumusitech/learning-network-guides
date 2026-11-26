@@ -89,7 +89,7 @@ EOF
 # MISIÓN 1 — VLAN sin servicio en el enlace ROAS (lab01)
 # -----------------------------------------------------------------------------
 m1_break() {
-  docker exec lab01-router sh -c "ip link set dev eth0.10 type vlan id 30 2>/dev/null || true"
+  docker exec lab01-router sh -c "ip link del dev eth0.10 2>/dev/null || true"
   cat <<'EOF'
 
 ================================================================================
@@ -105,21 +105,21 @@ EOF
 
 m1_hint() {
   cat <<'EOF'
-🧭 Capa 2 (Enlace de datos):
+🧭 Capa 2/3 (Enlace / Router-on-a-Stick):
    En Router-on-a-Stick cada VLAN vive en una subinterfaz del mismo cable (trunk).
-   Si el TAG de la subinterfaz del router no coincide con el de la PC, la trama
-   se pierde en el enlace.
-   Mirá: en el router, `ip -d link show` / `ip -d link show eth0.10`, y en el
-   switch el `bridge vlan show`. Comparalo con la subinterfaz de la PC.
+   Si a una VLAN le falta su subinterfaz en el router, esa VLAN se queda sin
+   gateway y las PCs no tienen a quién pedirle el resto de las redes.
+   Mirá: en el router, `ip -d link show` (¿existe la subinterfaz de la VLAN 10?),
+   `ip -br addr` y `ip route`. Comparalo con las otras VLANs del trunk.
 EOF
 }
 
 m1_verify() {
   need lab01-router lab01-pc-vlan10
-  if docker exec lab01-pc-vlan10 ping -c1 -W2 10.1.20.10 >/dev/null 2>&1; then
+  if docker exec lab01-pc-vlan10 ping -c3 -W2 10.1.20.10 >/dev/null 2>&1; then
     ok "la PC de la VLAN 10 vuelve a alcanzar el servidor de la VLAN 20."
   fi
-  ko "revisá el TAG/PVID de la subinterfaz de la VLAN 10 en el router (Capa 2)."
+  ko "revisá que la VLAN 10 tenga su subinterfaz con IP en el router (Router-on-a-Stick, Capa 2/3)."
 }
 
 # -----------------------------------------------------------------------------
@@ -163,8 +163,9 @@ m2_verify() {
 # -----------------------------------------------------------------------------
 m3_break() {
   docker exec lab03-rtr2 vtysh -c 'configure terminal' \
-    -c 'interface eth0' -c 'ip ospf network non-broadcast' -c 'exit' >/dev/null 2>&1 || true
+    -c 'interface eth0' -c 'ip ospf hello-interval 30' -c 'exit' >/dev/null 2>&1 || true
   docker exec lab03-rtr2 vtysh -c 'clear ip ospf process' >/dev/null 2>&1 || true
+  docker exec lab03-rtr1 vtysh -c 'clear ip ospf process' >/dev/null 2>&1 || true
   cat <<'EOF'
 
 ================================================================================
@@ -180,10 +181,11 @@ EOF
 m3_hint() {
   cat <<'EOF'
 🧭 Capa 3 (Red):
-   El "tipo de red" OSPF (point-to-point, broadcast, non-broadcast, ...) define
-   cómo se envían los Hellos. Si un extremo espera Hellos que el otro no manda,
-   la vecindad nunca se forma.
-   Mirá: `show ip ospf interface eth0` en ambos routers.
+   Para formar vecindad, los temporizadores OSPF (Hello / Dead) deben COINCIDIR
+   en ambos extremos. Si un router saluda cada 10 s y el otro cada 30 s, se
+   ignoran mutuamente y la adyacencia no se mantiene.
+   Mirá: `show ip ospf neighbor` y `show ip ospf interface eth0` en ambos
+   routers, comparando los intervalos Hello/Dead.
 EOF
 }
 
@@ -192,7 +194,7 @@ m3_verify() {
   if docker exec lab03-rtr1 vtysh -c 'show ip ospf neighbor' 2>/dev/null | grep '10.0.0.2' | grep -q 'Full'; then
     ok "la adyacencia OSPF con RTR2 (10.0.0.2) volvió a Full."
   fi
-  ko "revisá el tipo de red OSPF del enlace y que sea point-to-point en ambos (Capa 3)."
+  ko "revisá los temporizadores OSPF (Hello/Dead) y que coincidan en ambos extremos (Capa 3)."
 }
 
 # -----------------------------------------------------------------------------
@@ -210,7 +212,7 @@ m4_break() {
   Usuario: los usuarios de la Sucursal se quejan de lentitud al llegar al Data
            Center, aunque el enlace principal (fibra) está sano y el backup es
            mucho más lento.
-  Síntoma: el tráfico hacia 10.3.40.0/24 sale por el enlace de respaldo.
+  Síntoma: el tráfico hacia el Data Center (10.3.40.1) sale por el enlace de respaldo.
 ================================================================================
 EOF
 }
@@ -220,13 +222,13 @@ m4_hint() {
 🧭 Capa 3 (Red):
    OSPF elige la ruta con el COSTO total más bajo. Un costo mal puesto hace que
    el tráfico preferido salga por el enlace lento.
-   Mirá: `show ip route ospf` (Next Hop de 10.3.40.0/24) y `show ip ospf interface`.
+   Mirá: `show ip route ospf` (Next Hop de 10.3.40.1/32) y `show ip ospf interface`.
 EOF
 }
 
 m4_verify() {
   need lab03-rtr1 lab03-rtr2
-  if docker exec lab03-rtr2 vtysh -c 'show ip route 10.3.40.0/24' 2>/dev/null | grep -q '10.0.255.1'; then
+  if docker exec lab03-rtr2 vtysh -c 'show ip route 10.3.40.1/32' 2>/dev/null | grep -q '10.0.255.1,'; then
     ok "el tráfico al Data Center vuelve por el enlace principal."
   fi
   ko "revisá los costos OSPF de cada enlace y forzá el camino de costo bajo (Capa 3)."
@@ -362,6 +364,7 @@ m8_break() {
   docker exec lab03-rtr2 sh -c \
     "iptables -C INPUT -p 89 -j DROP 2>/dev/null || iptables -A INPUT -p 89 -j DROP" >/dev/null 2>&1 || true
   docker exec lab03-rtr2 vtysh -c 'clear ip ospf process' >/dev/null 2>&1 || true
+  docker exec lab03-rtr1 vtysh -c 'clear ip ospf process' >/dev/null 2>&1 || true
   cat <<'EOF'
 
 ================================================================================
