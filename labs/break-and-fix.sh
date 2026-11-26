@@ -89,7 +89,7 @@ EOF
 # MISIÓN 1 — VLAN sin servicio en el enlace ROAS (lab01)
 # -----------------------------------------------------------------------------
 m1_break() {
-  docker exec lab01-router sh -c "ip link set dev eth0.10 type vlan id 30 2>/dev/null || true"
+  docker exec lab01-router sh -c "ip link del dev eth0.10 2>/dev/null || true"
   cat <<'EOF'
 
 ================================================================================
@@ -105,21 +105,21 @@ EOF
 
 m1_hint() {
   cat <<'EOF'
-🧭 Capa 2 (Enlace de datos):
+🧭 Capa 2/3 (Enlace / Router-on-a-Stick):
    En Router-on-a-Stick cada VLAN vive en una subinterfaz del mismo cable (trunk).
-   Si el TAG de la subinterfaz del router no coincide con el de la PC, la trama
-   se pierde en el enlace.
-   Mirá: en el router, `ip -d link show` / `ip -d link show eth0.10`, y en el
-   switch el `bridge vlan show`. Comparalo con la subinterfaz de la PC.
+   Si a una VLAN le falta su subinterfaz en el router, esa VLAN se queda sin
+   gateway y las PCs no tienen a quién pedirle el resto de las redes.
+   Mirá: en el router, `ip -d link show` (¿existe la subinterfaz de la VLAN 10?),
+   `ip -br addr` y `ip route`. Comparalo con las otras VLANs del trunk.
 EOF
 }
 
 m1_verify() {
   need lab01-router lab01-pc-vlan10
-  if docker exec lab01-pc-vlan10 ping -c1 -W2 10.1.20.10 >/dev/null 2>&1; then
+  if docker exec lab01-pc-vlan10 ping -c3 -W2 10.1.20.10 >/dev/null 2>&1; then
     ok "la PC de la VLAN 10 vuelve a alcanzar el servidor de la VLAN 20."
   fi
-  ko "revisá el TAG/PVID de la subinterfaz de la VLAN 10 en el router (Capa 2)."
+  ko "revisá que la VLAN 10 tenga su subinterfaz con IP en el router (Router-on-a-Stick, Capa 2/3)."
 }
 
 # -----------------------------------------------------------------------------
