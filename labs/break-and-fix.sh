@@ -395,18 +395,30 @@ m8_verify() {
 # -----------------------------------------------------------------------------
 # DISPATCH
 # -----------------------------------------------------------------------------
+require_lab() {
+  # Verifica que el laboratorio de la misión esté levantado ANTES de tocar nada.
+  case "$1" in
+    1)   need lab01-router ;;
+    2|3|4|8) need lab03-rtr1 lab03-rtr2 ;;
+    5)   need lab04-fw-borde lab04-pc-interna ;;
+    6)   need lab04-fw-borde lab04-srv-web ;;
+    7)   need rtr-sede1 ;;
+  esac
+}
+
 do_break() {
   n="$(resolve_mission "$1")"
-  printf 'Inyectando la misión #%s en silencio...\n' "$n"
+  require_lab "$n"
+  printf 'Laboratorio OK. Inyectando la misión #%s en silencio...\n' "$n"
   case "$n" in
-    1) need lab01-router;                 m1_break ;;
-    2) need lab03-rtr1 lab03-rtr2;        m2_break ;;
-    3) need lab03-rtr1 lab03-rtr2;        m3_break ;;
-    4) need lab03-rtr1 lab03-rtr2;        m4_break ;;
-    5) need lab04-fw-borde lab04-pc-interna; m5_break ;;
-    6) need lab04-fw-borde lab04-srv-web; m6_break ;;
-    7) need rtr-sede1;                    m7_break ;;
-    8) need lab03-rtr1 lab03-rtr2;        m8_break ;;
+    1) m1_break ;;
+    2) m2_break ;;
+    3) m3_break ;;
+    4) m4_break ;;
+    5) m5_break ;;
+    6) m6_break ;;
+    7) m7_break ;;
+    8) m8_break ;;
   esac
 }
 
