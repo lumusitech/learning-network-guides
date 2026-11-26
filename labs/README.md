@@ -184,6 +184,50 @@ docker compose -f labs/docker-compose.integrative.yml down
 
 ---
 
+## 🎯 Modo Entrenamiento: "Break & Fix" — Guardia a Ciegas
+
+Los laboratorios por sí solos no entrenan el diagnóstico: cuando **vos** rompés algo, ya sabés qué rompiste. El script [`break-and-fix.sh`](break-and-fix.sh) invierte eso: inyecta una falla **secreta** en un lab ya levantado y te entrega **solo el ticket del usuario**. Diagnostikás, arreglás y recién ahí verificás si de verdad resolviste la causa raíz.
+
+```bash
+sh labs/break-and-fix.sh list                 # Ver las 8 misiones (sin revelar la causa)
+sh labs/break-and-fix.sh break 5              # Inyecta la falla 5 en silencio y muestra el ticket
+sh labs/break-and-fix.sh hint 5               # Una pista de capa OSI (sin regalar el comando)
+sh labs/break-and-fix.sh verify 5             # ✅ INCIDENTE RESUELTO  o  ❌ Aún falla + pista
+```
+
+| # | Laboratorio requerido | Síntoma del ticket |
+|:-:|-----------------------|--------------------|
+| 1 | `lab01-vlan-roas` | La PC de la VLAN 10 perdió acceso al servidor de la VLAN 20 |
+| 2 | `lab03-ospf-and-vrrp` | OSPF trabado en `EXSTART` y la sucursal no aprende rutas |
+| 3 | `lab03-ospf-and-vrrp` | La adyacencia OSPF no se forma (tipo de red del enlace) |
+| 4 | `lab03-ospf-and-vrrp` | El tráfico al Data Center sale por el enlace lento |
+| 5 | `lab04-nat-hairpin-mtu` | El ERP abre desde Internet pero **no** desde la oficina |
+| 6 | `lab04-nat-hairpin-mtu` | Las descargas grandes se congelan (las chicas andan) |
+| 7 | `docker-compose.integrative.yml` | El túnel está `UP`, pero la sucursal ve todo con la misma IP |
+| 8 | `lab03-ospf-and-vrrp` | OSPF se cayó de golpe en un router (el ping directo anda) |
+
+**Ejemplo completo (misión 5):**
+
+```bash
+# 1. Levantar el laboratorio de la misión y esperar a que esté listo:
+docker compose -f labs/docker-compose.lab04-nat-hairpin-mtu.yml up -d
+
+# 2. Inyectar la falla secreta y leer solo el ticket:
+sh labs/break-and-fix.sh break 5
+
+# 3. Diagnosticar y reparar (mirá la pista de capa OSI si te trabás):
+sh labs/break-and-fix.sh hint 5
+docker exec -it lab04-fw-borde iptables -t nat -S
+
+# 4. Comprobar si el incidente quedó resuelto:
+sh labs/break-and-fix.sh verify 5
+docker compose -f labs/docker-compose.lab04-nat-hairpin-mtu.yml down
+```
+
+> El script es **POSIX `sh`** (`set -eu`, sin *bashismos*), compatible con `/bin/sh` y pensado para pasar `shellcheck`. Cada `verify` corre una sonda real (`ping`, `curl`, `vtysh -c "show ip ospf neighbor"`, `iptables -S`) y devuelve código de salida `0` si arreglaste el incidente.
+
+---
+
 ## 🔗 Ver también
 
 - [`guides/README.md`](../guides/README.md) — Las 24 guías de configuración multi-vendor que explican cada protocolo practicado aquí
