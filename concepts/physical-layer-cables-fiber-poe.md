@@ -163,6 +163,39 @@ Pensá en esto como **las rutas de asfalto y la red eléctrica sobre las que cir
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. Si una ficha RJ45 tiene mal crimpado el pin 4 (par Azul) pero los pines 1, 2, 3 y 6 están bien, ¿por qué el enlace no se cae a cero y en cambio queda clavado en `100 Mbps`?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Fast Ethernet (10/100 Mbps) solo usa los pines 1, 2, 3 y 6 (dos pares). Gigabit Ethernet y PoE exigen los 4 pares completos. Al faltar uno de los pares Azul/Marrón, la autonegociación detecta que solo puede sostener dos pares y degrada el enlace a `100 Mbps` en lugar de dejarlo caído. Síntoma clásico: un puerto Gigabit fijo en `100 Mbps`.
+
+</details>
+
+**2. Un módulo SFP de fibra reporta `rx-power: -25 dBm`. ¿Qué indica ese valor y en qué punto pasás a `LOS`?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+La escala `dBm` es negativa: cuanto más cerca de `0`, más luz. La zona óptima es `-3` a `-18 dBm`; `-19` a `-24` avisa señal degradada (férula sucia, curva cerrada, empalme malo). Por debajo de `-26 dBm` (por ejemplo `-40 dBm`) hay `LOS` (*Loss of Signal*): fibra cortada o hilos `TX`/`RX` invertidos.
+
+</details>
+
+**3. ¿Por qué un `Duplex Mismatch` deja el enlace `UP` y con ping normal, pero hunde la velocidad real a menos de `1 Mbps`?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Ocurre cuando un extremo se fuerza manualmente a `Full-Duplex` y el otro queda en `Auto`. El lado `Auto`, al no recibir pulsos de negociación, asume por estándar `100 Mbps Half-Duplex`. El lado Full transmite sin escuchar, el lado Half detecta `Late Collisions` y el lado Full acumula errores `CRC`, destruyendo el rendimiento con cargas reales aunque el ping ocioso dé `1 ms`.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`how-to-think-like-network-engineer`](how-to-think-like-network-engineer.md) — Cómo empezar siempre el diagnóstico verificando las señales de Capa 1

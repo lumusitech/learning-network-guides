@@ -167,6 +167,39 @@ Si entendés quién pega el sticker al entrar (**`PVID`**), quién lo conserva e
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. Por un mismo puerto físico pueden salir 100 VLANs etiquetadas, pero ¿por qué SOLO puede salir una única VLAN como `Untagged`, y qué debe cumplir su `PVID`?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Porque si salieran dos VLANs sin etiqueta por el mismo cable, el switch vecino no tendría forma de saber cuál trama era de la VLAN 10 y cuál de la 20 al recibirlas desnudas. La única VLAN `Untagged` de un puerto debe coincidir con su `PVID` (en Cisco, su `native vlan`); las demás siempre viajan `Tagged` conservando sus 4 bytes de 802.1Q.
+
+</details>
+
+**2. En el caso de los 4 APs UniFi conectados a un switch Cisco, ¿por qué el puerto hacia cada AP debe ser híbrido (trunk con `native vlan 10`) y no un trunk puro?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Porque un AP UniFi recién instalado pide su IP de administración y busca al controlador enviando tramas **Untagged**, mientras que al tráfico de cada SSID le estampa su etiqueta (`VID 20` Staff, `VID 200` Invitados). Por eso se configura `PVID = 10` con `Untagged` en la VLAN 10 (donde vive el controlador) y `Tagged` en las VLANs 20 y 200 por el mismo cable.
+
+</details>
+
+**3. En MikroTik, ¿por qué apenas activás `vlan-filtering=yes` podés perder la conexión con el propio equipo, y qué olvido en `/interface bridge vlan` lo causa?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Porque el propio switch MikroTik (representado por `bridge1`, la CPU) necesita estar incluido como `tagged` en la VLAN de gestión dentro de `/interface bridge vlan`. Si te olvidás de agregar `bridge1` a la lista (`tagged=bridge1,ether1`), al activar el filtrado las tramas hacia la CPU de gestión se descartan y perdés SSH/WinBox de inmediato. Ayuda el mismo patrón en Cisco: crear `interface Vlan20` no crea la VLAN 20 en la base de Capa 2 hasta ejecutar `vlan 20`.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`ethernet-mac-and-arp`](ethernet-mac-and-arp.md) — Cómo funciona la tabla MAC del switch dentro de cada VLAN por separado

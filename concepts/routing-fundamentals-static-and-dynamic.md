@@ -182,6 +182,39 @@ Pensá en esto como **un sistema de carteles viales en las rotondas de una ruta 
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. Tenés una ruta estática `10.1.0.0/16` (`AD = 1`) y una ruta OSPF `10.1.20.0/24` (`AD = 110`). ¿Cuál gana para llegar a `10.1.20.50` y por qué?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Gana la OSPF `10.1.20.0/24`. La Regla 1 (*Longest Prefix Match*) se evalúa **antes** que la Distancia Administrativa: `/24` coincide en 24 bits y `/16` solo en 16, así que el prefijo más específico se impone. La AD solo desempata cuando las máscaras son idénticas.
+
+</details>
+
+**2. ¿En qué momento el router usa la Distancia Administrativa y qué protocolo gana por tener el valor más bajo?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+La AD (`0` a `255`, menor = más confiable) solo se usa cuando dos rutas tienen **exactamente la misma máscara**. Por eso una estática (`AD = 1`) le gana a la misma ruta por OSPF (`AD = 110`), a eBGP (`AD = 20`) y a RIP (`AD = 120`). La conectada directa tiene `AD = 0`, la máxima certeza, y `255` marca ruta inalcanzable.
+
+</details>
+
+**3. ¿Por qué un ping desde la consola del router a una sucursal funciona pero desde las PCs detrás de ese router no responde, aun con la ida bien ruteada?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+Es el problema de la **ruta de retorno**. El router origen, al pingear, usa como IP origen la del enlace (`/30`), que el router remoto sí conoce. La PC usa su IP (`10.1.10.50`), y si el router remoto no tiene ruta de vuelta hacia `10.1.10.0/24`, descarta la respuesta. El enrutamiento siempre es bidireccional (ida + vuelta).
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`ipv4-addressing-subnetting-and-vlsm`](ipv4-addressing-subnetting-and-vlsm.md) — Cómo diseñar bloques IP jerárquicos (`/16` y `/24`) para que las tablas de rutas sean limpias

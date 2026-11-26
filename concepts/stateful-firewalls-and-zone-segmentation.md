@@ -173,6 +173,39 @@ Pensá en esto como **la seguridad de un edificio corporativo con recepción en 
 
 ---
 
+## 🧪 Autoevaluación rápida (Active Recall)
+
+Respondé mentalmente antes de desplegar cada respuesta; si dudás, volvé a la sección correspondiente del documento.
+
+**1. Querés impedir que las PCs de la VLAN Invitados accedan al NAS de la VLAN Administración. ¿Por qué esa regla debe ir en la cadena `FORWARD` y no en `INPUT`, y cuál sería el síntoma si la pusieras en `INPUT`?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El tráfico de Invitados hacia el NAS **no termina en el router**: lo atraviesa de largo, por lo tanto lo evalúa la cadena `FORWARD`. La cadena `INPUT` solo procesa paquetes dirigidos a una IP propia del router (SSH, WinBox, DNS). Si pusieras la regla en `INPUT`, los invitados seguirían entrando al NAS como si nada, porque el paquete nunca llega a esa cadena.
+
+</details>
+
+**2. Explicá las dos primeras reglas universales de una cadena stateful y qué se rompe si invertís su orden o si colocás un `drop` de origen arriba de ellas.**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+La Regla #1 es `accept connection-state=established,related` (con `FastTrack` en MikroTik) y la Regla #2 es `drop connection-state=invalid`. El orden importa porque las reglas se leen de arriba hacia abajo (*First-Match*): si un `drop` de origen queda arriba, mata las respuestas `ESTABLISHED` de las cámaras o servidores y corta conversaciones legítimas iniciadas en sentido contrario.
+
+</details>
+
+**3. En el caso de las 40 cámaras de la VLAN 100, ¿por qué el NVR sigue viendo el video aunque las cámaras tengan prohibido iniciar conexiones (`NEW`), y en qué puesto debe ubicarse la regla de bloqueo?**
+
+<details>
+<summary>👀 Ver respuesta explicada</summary>
+
+El NVR (VLAN 40) es quien inicia la conexión RTSP `554` (`NEW`), así que el pedido pasa y crea estado en Conntrack. Las respuestas de video de las cámaras vuelven como tráfico `ESTABLISHED` y las aprueba la Regla #1. La regla `chain=forward src-address=10.1.100.0/24 action=drop` debe ir **debajo** de `established,related` y `drop invalid`, nunca en el puesto #1.
+
+</details>
+
+---
+
 ## 🔗 Ver también
 
 - [`tcp-udp-mtu-and-nat-conntrack`](tcp-udp-mtu-and-nat-conntrack.md) — Cómo funciona por dentro la tabla Conntrack sobre la que se apoya el Firewall Stateful

@@ -6,7 +6,7 @@ Tablas de alta densidad para consulta inmediata durante configuraciones, diseño
 
 ---
 
-## 🗂️ Índice de referencias (6/6 Completadas)
+## 🗂️ Índice de referencias (7/7 Completadas)
 
 | # | Referencia | Alcance | Estado |
 |---|------------|---------|:------:|
@@ -16,6 +16,7 @@ Tablas de alta densidad para consulta inmediata durante configuraciones, diseño
 | 4 | [`ieee-and-ietf-networking-standards.md`](ieee-and-ietf-networking-standards.md) | Mapa rápido de estándares IEEE 802.x (`802.1Q`, `802.1w`, `802.3ad`, `802.11k/v/r`) y RFCs esenciales | ✅ Disponible |
 | 5 | [`network-ports-protocols-and-multicast.md`](network-ports-protocols-and-multicast.md) | Puertos TCP/UDP de infraestructura, números de protocolo IP y direcciones MAC/IP Multicast de protocolos (OSPF, VRRP, HSRP, STP) | ✅ Disponible |
 | 6 | [`symptom-to-layer-troubleshooting-matrix.md`](symptom-to-layer-troubleshooting-matrix.md) | Matriz de guardia: Síntoma observado → Capa OSI → Primer comando multi-vendor → Causa raíz | ✅ Disponible |
+| 7 | [`active-recall-flashcards-and-drills.md`](active-recall-flashcards-and-drills.md) | **Active Recall:** 68 flashcards y desafíos con respuesta oculta (`<details>`) en 4 mazos: traducción CLI, consolas rotas, cálculo CIDR/VLSM y trampas de guardia | ✅ Disponible |
 
 ---
 

@@ -16,7 +16,7 @@ Sistema de aprendizaje práctico para **ingeniería, administración y operació
 | 🧠 [Conceptos y Modelos Mentales](concepts/) | **14** |
 | 🛠️ [Guías Prácticas Multi-Vendor](guides/) | **24** |
 | 🚨 [Escenarios Reales y Runbooks](scenarios/) | **20** |
-| 📚 [Referencias Rápidas y Cheatsheets](reference/) | **6** |
+| 📚 [Referencias Rápidas y Cheatsheets](reference/) | **7** |
 | 🧪 [Entornos de Laboratorio Docker / FRR](labs/) | **4** |
 
 ---
@@ -51,7 +51,7 @@ Sistema de aprendizaje práctico para **ingeniería, administración y operació
 │   ├── security-vpn/        # Rogue DHCP en LAN, Hairpin NAT interno, VPN UP pero sin tráfico por NAT, Router expuesto a fuerza bruta
 │   ├── wireless/            # Sticky Clients pegados a AP lejano, Celular en "Obteniendo IP..." (169.254.x.x) en VLAN de SSID
 │   └── maintenance/         # Migración de red plana a VLANs sin corte, Reemplazo de Switch Core multi-vendor, Upgrade remoto a 250 km
-└── reference/         # 6 cheatsheets de campo (Piedra Rosetta CLI, CIDR/VLSM/CGNAT, Fibra/SFP/PoE, IEEE/RFC, Puertos/Multicast, Matriz de Guardia)
+└── reference/         # 7 cheatsheets de campo (Piedra Rosetta CLI, CIDR/VLSM/CGNAT, Fibra/SFP/PoE, IEEE/RFC, Puertos/Multicast, Matriz de Guardia, Active Recall)
 ```
 
 **Flujo pedagógico:**
