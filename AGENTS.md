@@ -54,6 +54,7 @@ Cualquier modelo (grande o pequeño) que trabaje en este repositorio **DEBE invo
 | `network-guides-creator` | `guides/<dominio>/*.md` | Topología de referencia unificada, configuración comparada en Cisco IOS, MikroTik RouterOS v7 (`Bridge VLAN Filtering`), Switches Gestionables (`Tagged/Untagged/PVID`) y Linux, con interpretación de flags y rollback |
 | `network-scenarios-creator` | `scenarios/<dominio>/NN-*.md` | Runbooks de guardia e intervenciones de mantenimiento con Quick Triage multi-vendor, diagnóstico por capas OSI y mitigación con Verificar / Acción / Rollback |
 | `network-reference-creator` | `reference/*.md` | Tablas de consulta rápida de alta densidad con columna de interpretación y acción en campo |
+| `network-labs-creator` | `labs/docker-compose.*.yml` / `labs/*.sh` | Topologías reproducibles con Alpine (`iproute2`/`bridge`/`iptables`) y FRRouting (`vtysh`), scripts POSIX de entrenamiento ciego (`break-and-fix.sh`) y ejercicios paso a paso |
 
 ### Ejemplos Gold Standard de referencia en el repositorio
 
@@ -75,6 +76,7 @@ Antes de redactar un documento nuevo, cualquier agente debe tomar como referenci
      - `feat/guides-<nombre>`
      - `feat/scenarios-<nombre>`
      - `feat/reference-<nombre>`
+     - `feat/labs-<nombre>`
      - `fix/<alcance>-<descripcion>`
    - Validar localmente que no existan errores de formato ejecutando:
 
